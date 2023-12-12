@@ -1,3 +1,6 @@
+**WORK IN PROGRESS** This repo is not at alll ready for use.
+
+
 # Pulumi Component Provider Boilerplate (TypeScript)
 
 This repo is a boilerplate showing how to create a Pulumi component provider written in TypeScript. You can search-replace `xyz` with the name of your desired provider as a starting point for creating a component provider for your component resources.
