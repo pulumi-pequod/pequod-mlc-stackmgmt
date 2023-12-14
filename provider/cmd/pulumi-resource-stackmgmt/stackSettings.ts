@@ -1,4 +1,5 @@
-import { ComponentResource, ComponentResourceOptions, Output, getOrganization, getProject, getStack } from "@pulumi/pulumi";
+// import { ComponentResource, ComponentResourceOptions, Output, getOrganization, getProject, getStack } from "@pulumi/pulumi";
+import * as pulumi from "@pulumi/pulumi";
 import * as pulumiservice from "@pulumi/pulumiservice";
 import fetch from "node-fetch";
 
@@ -10,15 +11,15 @@ export interface StackSettingsArgs{
 }
 
 // Forces Pulumi stack settings for managing TTL and other settings.
-export class StackSettings extends ComponentResource {
+export class StackSettings extends pulumi.ComponentResource {
 
-  constructor(name: string, args: StackSettingsArgs, opts?: ComponentResourceOptions) {
-    super("custom:pulumi:stackmgmt", name, args, opts);
+  constructor(name: string, args: StackSettingsArgs, opts?: pulumi.ComponentResourceOptions) {
+    super("pequod:stackmgmt:stacksettings", name, args, opts);
 
     // Settings used below
-    const org = getOrganization()
-    const project = getProject()
-    const stack = getStack()
+    const org = pulumi.getOrganization()
+    const project = pulumi.getProject()
+    const stack = pulumi.getStack()
 
     //// Set stack tag for TTL
     // The TTL processor looks for a "ttl" stack tag set to the number of minutes to run.
@@ -47,18 +48,18 @@ export class StackSettings extends ComponentResource {
 
     // This stack tag tells the TTL stack how long it should wait before destroying the tagged stack.
     const ttlStackTag = new pulumiservice.StackTag(`${name}-ttl-stacktag`, {
-      organization: getOrganization(),
-      project: getProject(),
-      stack: getStack(),
+      organization: org,
+      project: project,
+      stack: stack,
       name: "ttl",
       value: ttlMinutes.toString(),
     }, { parent: this })
 
     // This stack tag tells the Drift Correction stack that this stack should be refreshed.
     const refreshStackTag = new pulumiservice.StackTag(`${name}-driftmanagement-stacktag`, {
-      organization: getOrganization(),
-      project: getProject(),
-      stack: getStack(),
+      organization: org,
+      project: project,
+      stack: stack,
       name: "drift_management",
       value: args.driftManagement || "Correct", // do both refresh and correction by default.
     }, { parent: this })
