@@ -1,4 +1,26 @@
-**WORK IN PROGRESS** This repo is not at alll ready for use.
+# Pequod Stack Management MLC
+This multilanguage component is used to manage various stack settings when launching stacks in the pequod organization via new project wizard.
+
+## Building and Publishing the MLC 
+When the component has been udated (see below), the process  to make the updated version available is as follows:
+* Build the SDKs and plugins
+* Publish the plugins
+* Publish the SDKs
+
+## Build SDKs and Plugins
+```bash
+# Regen the SDKs
+make generate
+
+# Rebuild the plugins
+make dist
+```
+
+## Publish the Plugins
+* Create a new github release of this repo using the same version number in the Makefile.
+* Upload the 
+
+
 
 
 # Pulumi Component Provider Boilerplate (TypeScript)
