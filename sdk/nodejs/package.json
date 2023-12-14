@@ -1,5 +1,5 @@
 {
-    "name": "@pulumi/stackmgmt",
+    "name": "@pulumi-pequod/stackmgmt",
     "version": "${VERSION}",
     "scripts": {
         "build": "tsc"

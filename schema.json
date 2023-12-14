@@ -40,6 +40,7 @@
             "respectSchemaVersion": true
         },
         "nodejs": {
+            "packageName": "@pequod/stackmgmt",
             "dependencies": {
                 "@pulumi/pulumi": "^3.0.0",
                 "@pulumi/pulumiservice": "^0.16.0",
@@ -54,6 +55,7 @@
             "respectSchemaVersion": true
         },
         "python": {
+            "packageName": "pequod_stackmgmt",
             "requires": {
                 "pulumi": ">=3.0.0,<4.0.0",
                 "pulumi-pulumiservice": ">=0.0.0,<1.0.0"

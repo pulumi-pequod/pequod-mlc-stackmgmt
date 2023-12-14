@@ -2,7 +2,7 @@
 This multilanguage component is used to manage various stack settings when launching stacks in the pequod organization via new project wizard.
 
 ## Building and Publishing the MLC 
-When the component has been udated (see below), the process  to make the updated version available is as follows:
+When the component has been udated, the process  to make the updated version available is as follows:
 * Build the SDKs and plugins
 * Publish the plugins
 * Publish the SDKs
@@ -26,7 +26,7 @@ make dist
 Pequod uses an AWS CodeArtifact repo for TS SDKs. 
 
 To publish to the codeartifact repo: 
-* cd to the `sdk/nodejs` folder
+* cd to the `sdk/nodejs/bin` folder
 * run `aws codeartifact login --tool npm --region us-east-2 --repository pequod-codeartifact-repo --domain pequod-codeartifact-domain`
 * Run `npm publish` to push the module to the artifactory.`
 

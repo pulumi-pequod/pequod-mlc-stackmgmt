@@ -1,7 +1,8 @@
 VERSION         := 0.0.1
 
 PACK            := stackmgmt
-PROJECT         := github.com/pulumi/pulumi-${PACK}
+ORG							:= pulumi-pequod
+PROJECT         := github.com/${ORG}/${PACK}
 
 PROVIDER        := pulumi-resource-${PACK}
 CODEGEN         := pulumi-gen-${PACK}
