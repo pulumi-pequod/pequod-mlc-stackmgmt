@@ -53,6 +53,7 @@ namespace Pulumi.Stackmgmt
         {
             var dst = src ?? new global::Pulumi.InvokeOptions{};
             dst.Version = src?.Version ?? Version;
+            dst.PluginDownloadURL = src?.PluginDownloadURL ?? "github://api.github.com/pulumi-pequod/pequod-stackmgmt";
             return dst;
         }
 
@@ -74,7 +75,7 @@ namespace Pulumi.Stackmgmt
         }
     }
 
-    internal sealed class StackmgmtResourceTypeAttribute : Pulumi.ResourceTypeAttribute
+    internal sealed class StackmgmtResourceTypeAttribute : global::Pulumi.ResourceTypeAttribute
     {
         public StackmgmtResourceTypeAttribute(string type) : base(type, Utilities.Version)
         {

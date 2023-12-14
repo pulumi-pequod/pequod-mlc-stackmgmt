@@ -10,7 +10,7 @@ using Pulumi.Serialization;
 namespace Pulumi.Stackmgmt
 {
     [StackmgmtResourceType("stackmgmt:index:StackSettings")]
-    public partial class StackSettings : Pulumi.ComponentResource
+    public partial class StackSettings : global::Pulumi.ComponentResource
     {
         /// <summary>
         /// Create a StackSettings resource with the given unique name, arguments, and options.
@@ -29,6 +29,7 @@ namespace Pulumi.Stackmgmt
             var defaultOptions = new ComponentResourceOptions
             {
                 Version = Utilities.Version,
+                PluginDownloadURL = "github://api.github.com/pulumi-pequod/pequod-stackmgmt",
             };
             var merged = ComponentResourceOptions.Merge(defaultOptions, options);
             // Override the ID if one was specified for consistency with other language SDKs.
@@ -37,7 +38,7 @@ namespace Pulumi.Stackmgmt
         }
     }
 
-    public sealed class StackSettingsArgs : Pulumi.ResourceArgs
+    public sealed class StackSettingsArgs : global::Pulumi.ResourceArgs
     {
         /// <summary>
         /// Drift management setting for refresh or correction.
@@ -60,5 +61,6 @@ namespace Pulumi.Stackmgmt
         public StackSettingsArgs()
         {
         }
+        public static new StackSettingsArgs Empty => new StackSettingsArgs();
     }
 }

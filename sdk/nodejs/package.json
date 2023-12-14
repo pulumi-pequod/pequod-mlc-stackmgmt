@@ -2,8 +2,7 @@
     "name": "@pulumi/stackmgmt",
     "version": "${VERSION}",
     "scripts": {
-        "build": "tsc",
-        "install": "node scripts/install-pulumi-plugin.js resource stackmgmt ${VERSION}"
+        "build": "tsc"
     },
     "dependencies": {
         "@pulumi/pulumi": "^3.0.0",
@@ -17,6 +16,8 @@
         "typescript": "^4.6.3"
     },
     "pulumi": {
-        "resource": true
+        "resource": true,
+        "name": "stackmgmt",
+        "server": "github://api.github.com/pulumi-pequod/pequod-stackmgmt"
     }
 }

@@ -10,7 +10,7 @@ using Pulumi.Serialization;
 namespace Pulumi.Stackmgmt
 {
     [StackmgmtResourceType("pulumi:providers:stackmgmt")]
-    public partial class Provider : Pulumi.ProviderResource
+    public partial class Provider : global::Pulumi.ProviderResource
     {
         /// <summary>
         /// Create a Provider resource with the given unique name, arguments, and options.
@@ -29,6 +29,7 @@ namespace Pulumi.Stackmgmt
             var defaultOptions = new CustomResourceOptions
             {
                 Version = Utilities.Version,
+                PluginDownloadURL = "github://api.github.com/pulumi-pequod/pequod-stackmgmt",
             };
             var merged = CustomResourceOptions.Merge(defaultOptions, options);
             // Override the ID if one was specified for consistency with other language SDKs.
@@ -37,10 +38,11 @@ namespace Pulumi.Stackmgmt
         }
     }
 
-    public sealed class ProviderArgs : Pulumi.ResourceArgs
+    public sealed class ProviderArgs : global::Pulumi.ResourceArgs
     {
         public ProviderArgs()
         {
         }
+        public static new ProviderArgs Empty => new ProviderArgs();
     }
 }

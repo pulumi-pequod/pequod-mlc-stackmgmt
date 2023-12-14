@@ -1,6 +1,6 @@
 {
     "name": "stackmgmt",
-    "pluginDownloadURL": "https://"
+    "pluginDownloadURL": "github://api.github.com/pulumi-pequod/pequod-stackmgmt",
     "resources": {
         "stackmgmt:index:StackSettings": {
             "isComponent": true,

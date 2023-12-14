@@ -7,6 +7,7 @@ import (
 	"context"
 	"reflect"
 
+	"github.com/pulumi/pulumi-stackmgmt/sdk/go/stackmgmt/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
@@ -21,6 +22,7 @@ func NewStackSettings(ctx *pulumi.Context,
 		args = &StackSettingsArgs{}
 	}
 
+	opts = internal.PkgResourceDefaultOpts(opts)
 	var resource StackSettings
 	err := ctx.RegisterRemoteComponentResource("stackmgmt:index:StackSettings", name, args, &resource, opts...)
 	if err != nil {
