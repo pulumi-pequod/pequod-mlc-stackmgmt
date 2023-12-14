@@ -1,4 +1,4 @@
-module github.com/pulumi/pulumi-xyz
+module github.com/pulumi/pulumi-pequod-stackmgmt
 
 go 1.17
 

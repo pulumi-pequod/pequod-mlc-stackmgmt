@@ -1,30 +1,28 @@
 {
-    "name": "xyz",
+    "name": "stackmgmt",
+    "pluginDownloadURL": "https://"
     "resources": {
-        "xyz:index:StaticPage": {
+        "stackmgmt:index:StackSettings": {
             "isComponent": true,
             "inputProperties": {
-                "indexContent": {
+                "ttlTime": {
+                    "type": "number",
+                    "description": "Time to live time setting."
+                },
+                "driftManagement": {
                     "type": "string",
-                    "description": "The HTML content for index.html."
+                    "description": "Drift management setting for refresh or correction."
+                },
+                "teamAssignment": {
+                    "type": "string",
+                    "description": "Team to which the stack should be assigned."
                 }
             },
             "requiredInputs": [
-                "indexContent"
             ],
             "properties": {
-                "bucket": {
-                    "$ref": "/aws/v4.0.0/schema.json#/resources/aws:s3%2Fbucket:Bucket",
-                    "description": "The bucket resource."
-                },
-                "websiteUrl": {
-                    "type": "string",
-                    "description": "The website URL."
-                }
             },
             "required": [
-                "bucket",
-                "websiteUrl"
             ]
         }
     },
@@ -32,20 +30,25 @@
         "csharp": {
             "packageReferences": {
                 "Pulumi": "3.*",
-                "Pulumi.Aws": "5.*"
+                "Pulumi.PulumiService": "0.*"
             },
             "respectSchemaVersion": true
         },
         "go": {
             "generateResourceContainerTypes": true,
-            "importBasePath": "github.com/pulumi/pulumi-xyz/sdk/go/xyz",
+            "importBasePath": "github.com/pulumi/pulumi-stackmgmt/sdk/go/stackmgmt",
             "respectSchemaVersion": true
         },
         "nodejs": {
             "dependencies": {
-                "@pulumi/aws": "^5.0.0"
+                "@pulumi/pulumi": "^3.0.0",
+                "@pulumi/pulumiservice": "^0.16.0",
+                "@types/node-fetch": "^2.6.2",
+                "node-fetch": "^2.6.2"
             },
             "devDependencies": {
+                "@types/node": "^10.0.0",
+                "pkg": "^5.6.0",
                 "typescript": "^4.6.3"
             },
             "respectSchemaVersion": true
@@ -53,7 +56,7 @@
         "python": {
             "requires": {
                 "pulumi": ">=3.0.0,<4.0.0",
-                "pulumi-aws": ">=5.0.0,<6.0.0"
+                "pulumi-pulumiservice": ">=0.0.0,<1.0.0"
             },
             "respectSchemaVersion": true
         }

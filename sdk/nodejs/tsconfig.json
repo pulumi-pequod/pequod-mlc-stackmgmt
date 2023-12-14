@@ -15,7 +15,7 @@
     "files": [
         "index.ts",
         "provider.ts",
-        "staticPage.ts",
+        "stackSettings.ts",
         "utilities.ts"
     ]
 }

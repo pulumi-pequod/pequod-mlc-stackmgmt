@@ -9,10 +9,10 @@ yarn.lock
 package-lock.json
 .idea/
 **/version.txt
-**/dist
+# **/dist
 nuget/
 **/build
-dist/
+# dist/
 .DS_Store
 
 ci-scripts/

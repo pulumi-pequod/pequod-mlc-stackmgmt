@@ -7,33 +7,20 @@ using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi.Serialization;
 
-namespace Pulumi.Xyz
+namespace Pulumi.Stackmgmt
 {
-    [XyzResourceType("xyz:index:StaticPage")]
-    public partial class StaticPage : Pulumi.ComponentResource
+    [StackmgmtResourceType("stackmgmt:index:StackSettings")]
+    public partial class StackSettings : Pulumi.ComponentResource
     {
         /// <summary>
-        /// The bucket resource.
-        /// </summary>
-        [Output("bucket")]
-        public Output<Pulumi.Aws.S3.Bucket> Bucket { get; private set; } = null!;
-
-        /// <summary>
-        /// The website URL.
-        /// </summary>
-        [Output("websiteUrl")]
-        public Output<string> WebsiteUrl { get; private set; } = null!;
-
-
-        /// <summary>
-        /// Create a StaticPage resource with the given unique name, arguments, and options.
+        /// Create a StackSettings resource with the given unique name, arguments, and options.
         /// </summary>
         ///
         /// <param name="name">The unique name of the resource</param>
         /// <param name="args">The arguments used to populate this resource's properties</param>
         /// <param name="options">A bag of options that control this resource's behavior</param>
-        public StaticPage(string name, StaticPageArgs args, ComponentResourceOptions? options = null)
-            : base("xyz:index:StaticPage", name, args ?? new StaticPageArgs(), MakeResourceOptions(options, ""), remote: true)
+        public StackSettings(string name, StackSettingsArgs? args = null, ComponentResourceOptions? options = null)
+            : base("stackmgmt:index:StackSettings", name, args ?? new StackSettingsArgs(), MakeResourceOptions(options, ""), remote: true)
         {
         }
 
@@ -50,15 +37,27 @@ namespace Pulumi.Xyz
         }
     }
 
-    public sealed class StaticPageArgs : Pulumi.ResourceArgs
+    public sealed class StackSettingsArgs : Pulumi.ResourceArgs
     {
         /// <summary>
-        /// The HTML content for index.html.
+        /// Drift management setting for refresh or correction.
         /// </summary>
-        [Input("indexContent", required: true)]
-        public Input<string> IndexContent { get; set; } = null!;
+        [Input("driftManagement")]
+        public Input<string>? DriftManagement { get; set; }
 
-        public StaticPageArgs()
+        /// <summary>
+        /// Team to which the stack should be assigned.
+        /// </summary>
+        [Input("teamAssignment")]
+        public Input<string>? TeamAssignment { get; set; }
+
+        /// <summary>
+        /// Time to live time setting.
+        /// </summary>
+        [Input("ttlTime")]
+        public Input<double>? TtlTime { get; set; }
+
+        public StackSettingsArgs()
         {
         }
     }
