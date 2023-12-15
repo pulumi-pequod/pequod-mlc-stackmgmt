@@ -1,5 +1,7 @@
 .pulumi
+# Keep python bin for package references via github for the time being at least
 **/bin/
+!/sdk/python/**
 **/obj/
 **/node_modules/
 vendor/
