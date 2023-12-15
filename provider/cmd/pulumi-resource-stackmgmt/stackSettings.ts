@@ -17,7 +17,7 @@ export class StackSettings extends pulumi.ComponentResource {
     super("pequod:stackmgmt:stacksettings", name, args, opts);
 
     // Settings used below
-    const org = pulumi.getOrganization()
+    const org = "pequod" // Temporary. Will use getOrganization()
     const project = pulumi.getProject()
     const stack = pulumi.getStack()
 
