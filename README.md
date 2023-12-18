@@ -1,13 +1,16 @@
-# Pequod Stack Management MLC
+# Pequod Stack Management Multilanguage Component
 This multilanguage component is used to manage various stack settings when launching stacks in the pequod organization via new project wizard.
 
 ## Building and Publishing the MLC 
-When the component has been udated, the process  to make the updated version available is as follows:
+Whenever the component code (under provider/cmd/pulumi-resource...) has been udated, follow the process below to make the updated version available:
 * Build the SDKs and plugins
 * Publish the plugins
 * Publish the SDKs
 
 ## Build SDKs and Plugins
+From the main directory (where the Makefile is located), do the following:
+* Update `VERSION` in the Makefile to the next release.
+* Execute these steps on the command line:
 ```bash
 # Regen the SDKs
 make generate
@@ -23,17 +26,20 @@ make dist
 
 ## Publish the SDKs
 ### Typescript
-Pequod uses an AWS CodeArtifact repo for TS SDKs. 
+Pequod uses AWS CodeArtifact repo for TS SDKs. 
 
 To publish to the codeartifact repo: 
 * cd to the `sdk/nodejs/bin` folder
 * run `aws codeartifact login --tool npm --region us-east-2 --repository pequod-codeartifact-repo --domain pequod-codeartifact-domain`
 * Run `npm publish` to push the module to the artifactory.`
 
-To use in code, `import { StackSettings } from "@pequod/stackmgmt";`
+Refer to the `pequod-templates` repo for `package.json` and code examples of how to use this package.
 
 ### Python
-TBD
+Pequod currently uses github versioning to distribute python packages.  
+The build process above sets things up for this.
+
+Refer to the `pequod-templates` repo for `requirements.txt` and code examples of how to use this package.
 
 ### .NET
 TBD
