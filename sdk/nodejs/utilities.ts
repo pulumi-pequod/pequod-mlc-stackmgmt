@@ -53,7 +53,7 @@ export function getVersion(): string {
 
 /** @internal */
 export function resourceOptsDefaults(): any {
-    return { version: getVersion(), pluginDownloadURL: "github://api.github.com/pulumi-pequod/pequod-stackmgmt" };
+    return { version: getVersion(), pluginDownloadURL: "github://api.github.com/pulumi-pequod/pequod-mlc-stackmgmt" };
 }
 
 /** @internal */

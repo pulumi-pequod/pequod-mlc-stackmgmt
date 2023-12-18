@@ -53,7 +53,7 @@ namespace Pulumi.Stackmgmt
         {
             var dst = src ?? new global::Pulumi.InvokeOptions{};
             dst.Version = src?.Version ?? Version;
-            dst.PluginDownloadURL = src?.PluginDownloadURL ?? "github://api.github.com/pulumi-pequod/pequod-stackmgmt";
+            dst.PluginDownloadURL = src?.PluginDownloadURL ?? "github://api.github.com/pulumi-pequod/pequod-mlc-stackmgmt";
             return dst;
         }
 

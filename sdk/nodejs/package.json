@@ -18,6 +18,6 @@
     "pulumi": {
         "resource": true,
         "name": "stackmgmt",
-        "server": "github://api.github.com/pulumi-pequod/pequod-stackmgmt"
+        "server": "github://api.github.com/pulumi-pequod/pequod-mlc-stackmgmt"
     }
 }
