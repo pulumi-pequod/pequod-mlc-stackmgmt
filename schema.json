@@ -1,6 +1,6 @@
 {
     "name": "stackmgmt",
-    "pluginDownloadURL": "github://api.github.com/pulumi-pequod/pequod-stackmgmt",
+    "pluginDownloadURL": "github://api.github.com/pulumi-pequod/pequod-mlc-stackmgmt",
     "resources": {
         "stackmgmt:index:StackSettings": {
             "isComponent": true,
@@ -36,7 +36,7 @@
         },
         "go": {
             "generateResourceContainerTypes": true,
-            "importBasePath": "github.com/pulumi/pulumi-stackmgmt/sdk/go/stackmgmt",
+            "importBasePath": "github.com/pulumi-pequod/pulumi-mlc-stackmgmt/sdk/go/stackmgmt",
             "respectSchemaVersion": true
         },
         "nodejs": {
