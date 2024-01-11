@@ -47,6 +47,12 @@ namespace Pulumi.Stackmgmt
         public Input<string>? DriftManagement { get; set; }
 
         /// <summary>
+        /// Pulumi access token to set up as a deployment environment variable if provided.
+        /// </summary>
+        [Input("pulumiAccessToken")]
+        public Input<string>? PulumiAccessToken { get; set; }
+
+        /// <summary>
         /// Team to which the stack should be assigned.
         /// </summary>
         [Input("teamAssignment")]

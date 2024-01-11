@@ -34,6 +34,8 @@ func NewStackSettings(ctx *pulumi.Context,
 type stackSettingsArgs struct {
 	// Drift management setting for refresh or correction.
 	DriftManagement *string `pulumi:"driftManagement"`
+	// Pulumi access token to set up as a deployment environment variable if provided.
+	PulumiAccessToken *string `pulumi:"pulumiAccessToken"`
 	// Team to which the stack should be assigned.
 	TeamAssignment *string `pulumi:"teamAssignment"`
 	// Time to live time setting.
@@ -44,6 +46,8 @@ type stackSettingsArgs struct {
 type StackSettingsArgs struct {
 	// Drift management setting for refresh or correction.
 	DriftManagement pulumi.StringPtrInput
+	// Pulumi access token to set up as a deployment environment variable if provided.
+	PulumiAccessToken pulumi.StringPtrInput
 	// Team to which the stack should be assigned.
 	TeamAssignment pulumi.StringPtrInput
 	// Time to live time setting.

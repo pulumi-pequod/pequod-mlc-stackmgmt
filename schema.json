@@ -16,6 +16,10 @@
                 "teamAssignment": {
                     "type": "string",
                     "description": "Team to which the stack should be assigned."
+                },
+                "pulumiAccessToken": {
+                    "type": "string",
+                    "description": "Pulumi access token to set up as a deployment environment variable if provided."
                 }
             },
             "requiredInputs": [

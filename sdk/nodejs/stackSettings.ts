@@ -32,6 +32,7 @@ export class StackSettings extends pulumi.ComponentResource {
         opts = opts || {};
         if (!opts.id) {
             resourceInputs["driftManagement"] = args ? args.driftManagement : undefined;
+            resourceInputs["pulumiAccessToken"] = args ? args.pulumiAccessToken : undefined;
             resourceInputs["teamAssignment"] = args ? args.teamAssignment : undefined;
             resourceInputs["ttlTime"] = args ? args.ttlTime : undefined;
         } else {
@@ -49,6 +50,10 @@ export interface StackSettingsArgs {
      * Drift management setting for refresh or correction.
      */
     driftManagement?: pulumi.Input<string>;
+    /**
+     * Pulumi access token to set up as a deployment environment variable if provided.
+     */
+    pulumiAccessToken?: pulumi.Input<string>;
     /**
      * Team to which the stack should be assigned.
      */

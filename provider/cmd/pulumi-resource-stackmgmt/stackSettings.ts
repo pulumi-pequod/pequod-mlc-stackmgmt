@@ -8,6 +8,7 @@ export interface StackSettingsArgs{
   ttlMinutes?: number,
   driftManagement?: string,
   teamAssignment?: string, 
+  pulumiAccessToken?: pulumi.Output<string>,
 }
 
 // Forces Pulumi stack settings for managing TTL and other settings.
@@ -105,12 +106,26 @@ export class StackSettings extends pulumi.ComponentResource {
         const pathFilter = `${settings.sourceContext.git.repoDir}/**`
         settings.gitHub.paths=[pathFilter]
       }
+
+      let operationContext = {}
+      const pulumiAccessToken = args.pulumiAccessToken
+      // Setup deployment environment variable to support things like stack references.
+      if (pulumiAccessToken) {
+        const operationContext = pulumiAccessToken.apply(pulumiAccessToken => 
+          JSON.stringify({
+            environmentVariables: {
+              PULUMI_ACCESS_TOKEN: pulumiAccessToken
+            }
+          })
+        )
+      }
+
       const deploySettings = new pulumiservice.DeploymentSettings(`${name}-deployment-settings`, {
         organization: org,
         project: project,
         stack: stack,
         github: settings.gitHub,
-        // operationContext: {}, // Commented out to force an update event on refresh. This is harmless but shows an update event.
+        operationContext: operationContext,
         sourceContext: settings.sourceContext,
       }, { parent: this, retainOnDelete: true }); // Retain on delete so that deploy actions are maintained.
     })
