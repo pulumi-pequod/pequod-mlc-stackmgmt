@@ -111,12 +111,12 @@ export class StackSettings extends pulumi.ComponentResource {
       const pulumiAccessToken = args.pulumiAccessToken
       // Setup deployment environment variable to support things like stack references.
       if (pulumiAccessToken) {
-        const operationContext = pulumiAccessToken.apply(pulumiAccessToken => 
-          JSON.stringify({
+        operationContext = pulumi.jsonStringify(
+          {
             environmentVariables: {
               PULUMI_ACCESS_TOKEN: pulumiAccessToken
             }
-          })
+          }
         )
       }
 
