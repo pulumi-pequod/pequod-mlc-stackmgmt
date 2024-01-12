@@ -8,7 +8,7 @@ from setuptools.command.install import install
 from subprocess import check_call
 
 
-VERSION = "2.1.1"
+VERSION = "2.1.3"
 def readme():
     try:
         with open('README.md', encoding='utf-8') as f:

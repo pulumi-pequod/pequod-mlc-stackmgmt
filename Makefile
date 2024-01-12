@@ -1,4 +1,4 @@
-VERSION         := 2.1.1
+VERSION         := 2.1.3
 
 PACK            := stackmgmt
 ORG							:= pulumi-pequod

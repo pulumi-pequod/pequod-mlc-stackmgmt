@@ -110,14 +110,9 @@ export class StackSettings extends pulumi.ComponentResource {
       let operationContext = {}
       const pulumiAccessToken = args.pulumiAccessToken
       // Setup deployment environment variable to support things like stack references.
+      let patEnvVar = {}
       if (pulumiAccessToken) {
-        operationContext = pulumi.jsonStringify(
-          {
-            environmentVariables: {
-              PULUMI_ACCESS_TOKEN: pulumiAccessToken
-            }
-          }
-        )
+        patEnvVar = { PULUMI_ACCESS_TOKEN: pulumiAccessToken }
       }
 
       const deploySettings = new pulumiservice.DeploymentSettings(`${name}-deployment-settings`, {
@@ -125,7 +120,9 @@ export class StackSettings extends pulumi.ComponentResource {
         project: project,
         stack: stack,
         github: settings.gitHub,
-        operationContext: operationContext,
+        operationContext: {
+          environmentVariables: patEnvVar
+        },        
         sourceContext: settings.sourceContext,
       }, { parent: this, retainOnDelete: true }); // Retain on delete so that deploy actions are maintained.
     })
