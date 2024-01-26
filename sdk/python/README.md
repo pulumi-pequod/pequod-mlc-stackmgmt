@@ -20,12 +20,14 @@ make build
 make dist
 ```
 
+* Push/merge the code to the main branch.
+
+
 ## Publish the Plugins
 * Create a new github release of this repo using the same version number in the Makefile.
 * Upload the files in the `dist` folder as attachments to the release.
 
 ## Publish the SDKs
-Be sure to push the updated code to the repo and merged to the main branch.
 
 ### Typescript
 Pequod uses AWS CodeArtifact repo for TS SDKs. 

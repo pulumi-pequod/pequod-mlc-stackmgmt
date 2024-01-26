@@ -58,15 +58,6 @@ export class StackSettings extends pulumi.ComponentResource {
       value: args.driftManagement || "Correct", // do both refresh and correction by default.
     }, { parent: this })
 
-    // This stack tag is used to identify whether or not the stack is eligible for purging.
-    const deleteStackTag = new pulumiservice.StackTag(`${name}-delete-stacktag`, {
-      organization: org,
-      project: project,
-      stack: stack,
-      name: "delete_stack",
-      value: args.deleteStack || "True", 
-    }, { parent: this, retainOnDelete: true })
-
     //// Manage the stack's deployment that was created by new project wizard.
     // Get the current settings and then optionally add a path filter if needed.
     interface StackDeploymentSettings {
