@@ -1,6 +1,7 @@
 // import { ComponentResource, ComponentResourceOptions, Output, getOrganization, getProject, getStack } from "@pulumi/pulumi";
 import * as pulumi from "@pulumi/pulumi";
 import * as pulumiservice from "@pulumi/pulumiservice";
+import * as command from "@pulumi/command";
 import fetch from "node-fetch";
 
 // Interface for StackSettings
@@ -57,6 +58,15 @@ export class StackSettings extends pulumi.ComponentResource {
       name: "drift_management",
       value: args.driftManagement || "Correct", // do both refresh and correction by default.
     }, { parent: this })
+
+    // This stack tag indicates whether or not the purge automation should delete the stack.
+    // Because the tag needs to remain on destroy and the provider balks if the stack tag already exists 
+    // (which would be the case on a pulumi up after a destroy), 
+    // the command provider is used to run pulumi cli to set the tag and not delete it on destroy.
+    const stack_fqdn = `${org}/${project}/${stack}`
+    const addDeleteStackTag = new command.local.Command("addDeleteStackTag", {
+      create: `pulumi stack tag set delete_stack ${args.deleteStack} --stack ${stack_fqdn}`
+    })
 
     //// Manage the stack's deployment that was created by new project wizard.
     // Get the current settings and then optionally add a path filter if needed.
