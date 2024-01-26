@@ -64,8 +64,9 @@ export class StackSettings extends pulumi.ComponentResource {
     // (which would be the case on a pulumi up after a destroy), 
     // the command provider is used to run pulumi cli to set the tag and not delete it on destroy.
     const stack_fqdn = `${org}/${project}/${stack}`
+    const tagValue = args.deleteStack || "True"
     const addDeleteStackTag = new command.local.Command("addDeleteStackTag", {
-      create: `pulumi stack tag set delete_stack ${args.deleteStack} --stack ${stack_fqdn}`
+      create: `pulumi stack tag set delete_stack ${tagValue} --stack ${stack_fqdn}`
     })
 
     //// Manage the stack's deployment that was created by new project wizard.
