@@ -31,6 +31,7 @@ export class StackSettings extends pulumi.ComponentResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
+            resourceInputs["deleteStack"] = args ? args.deleteStack : undefined;
             resourceInputs["driftManagement"] = args ? args.driftManagement : undefined;
             resourceInputs["pulumiAccessToken"] = args ? args.pulumiAccessToken : undefined;
             resourceInputs["teamAssignment"] = args ? args.teamAssignment : undefined;
@@ -46,6 +47,10 @@ export class StackSettings extends pulumi.ComponentResource {
  * The set of arguments for constructing a StackSettings resource.
  */
 export interface StackSettingsArgs {
+    /**
+     * Stack delete setting for automated purge processing.
+     */
+    deleteStack?: pulumi.Input<string>;
     /**
      * Drift management setting for refresh or correction.
      */

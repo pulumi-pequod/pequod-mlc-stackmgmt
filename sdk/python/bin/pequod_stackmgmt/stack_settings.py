@@ -14,17 +14,21 @@ __all__ = ['StackSettingsArgs', 'StackSettings']
 @pulumi.input_type
 class StackSettingsArgs:
     def __init__(__self__, *,
+                 delete_stack: Optional[pulumi.Input[str]] = None,
                  drift_management: Optional[pulumi.Input[str]] = None,
                  pulumi_access_token: Optional[pulumi.Input[str]] = None,
                  team_assignment: Optional[pulumi.Input[str]] = None,
                  ttl_time: Optional[pulumi.Input[float]] = None):
         """
         The set of arguments for constructing a StackSettings resource.
+        :param pulumi.Input[str] delete_stack: Stack delete setting for automated purge processing.
         :param pulumi.Input[str] drift_management: Drift management setting for refresh or correction.
         :param pulumi.Input[str] pulumi_access_token: Pulumi access token to set up as a deployment environment variable if provided.
         :param pulumi.Input[str] team_assignment: Team to which the stack should be assigned.
         :param pulumi.Input[float] ttl_time: Time to live time setting.
         """
+        if delete_stack is not None:
+            pulumi.set(__self__, "delete_stack", delete_stack)
         if drift_management is not None:
             pulumi.set(__self__, "drift_management", drift_management)
         if pulumi_access_token is not None:
@@ -33,6 +37,18 @@ class StackSettingsArgs:
             pulumi.set(__self__, "team_assignment", team_assignment)
         if ttl_time is not None:
             pulumi.set(__self__, "ttl_time", ttl_time)
+
+    @property
+    @pulumi.getter(name="deleteStack")
+    def delete_stack(self) -> Optional[pulumi.Input[str]]:
+        """
+        Stack delete setting for automated purge processing.
+        """
+        return pulumi.get(self, "delete_stack")
+
+    @delete_stack.setter
+    def delete_stack(self, value: Optional[pulumi.Input[str]]):
+        pulumi.set(self, "delete_stack", value)
 
     @property
     @pulumi.getter(name="driftManagement")
@@ -88,6 +104,7 @@ class StackSettings(pulumi.ComponentResource):
     def __init__(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
+                 delete_stack: Optional[pulumi.Input[str]] = None,
                  drift_management: Optional[pulumi.Input[str]] = None,
                  pulumi_access_token: Optional[pulumi.Input[str]] = None,
                  team_assignment: Optional[pulumi.Input[str]] = None,
@@ -97,6 +114,7 @@ class StackSettings(pulumi.ComponentResource):
         Create a StackSettings resource with the given unique name, props, and options.
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
+        :param pulumi.Input[str] delete_stack: Stack delete setting for automated purge processing.
         :param pulumi.Input[str] drift_management: Drift management setting for refresh or correction.
         :param pulumi.Input[str] pulumi_access_token: Pulumi access token to set up as a deployment environment variable if provided.
         :param pulumi.Input[str] team_assignment: Team to which the stack should be assigned.
@@ -125,6 +143,7 @@ class StackSettings(pulumi.ComponentResource):
     def _internal_init(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
+                 delete_stack: Optional[pulumi.Input[str]] = None,
                  drift_management: Optional[pulumi.Input[str]] = None,
                  pulumi_access_token: Optional[pulumi.Input[str]] = None,
                  team_assignment: Optional[pulumi.Input[str]] = None,
@@ -140,6 +159,7 @@ class StackSettings(pulumi.ComponentResource):
                 raise TypeError('__props__ is only valid when passed in combination with a valid opts.id to get an existing resource')
             __props__ = StackSettingsArgs.__new__(StackSettingsArgs)
 
+            __props__.__dict__["delete_stack"] = delete_stack
             __props__.__dict__["drift_management"] = drift_management
             __props__.__dict__["pulumi_access_token"] = pulumi_access_token
             __props__.__dict__["team_assignment"] = team_assignment
