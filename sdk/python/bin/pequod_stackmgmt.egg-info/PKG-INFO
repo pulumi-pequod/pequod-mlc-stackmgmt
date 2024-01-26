@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: pequod-stackmgmt
-Version: 2.2.0
+Version: 2.2.1
 Requires-Python: >=3.7
 Description-Content-Type: text/markdown
 
@@ -31,6 +31,8 @@ make dist
 * Upload the files in the `dist` folder as attachments to the release.
 
 ## Publish the SDKs
+Be sure to push the updated code to the repo and merged to the main branch.
+
 ### Typescript
 Pequod uses AWS CodeArtifact repo for TS SDKs. 
 

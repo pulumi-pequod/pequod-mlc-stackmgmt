@@ -25,6 +25,8 @@ make dist
 * Upload the files in the `dist` folder as attachments to the release.
 
 ## Publish the SDKs
+Be sure to push the updated code to the repo and merged to the main branch.
+
 ### Typescript
 Pequod uses AWS CodeArtifact repo for TS SDKs. 
 

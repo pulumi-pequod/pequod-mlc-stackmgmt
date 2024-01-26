@@ -65,7 +65,7 @@ export class StackSettings extends pulumi.ComponentResource {
       stack: stack,
       name: "delete_stack",
       value: args.deleteStack || "True", 
-    }, { parent: this })
+    }, { parent: this, retainOnDelete: true })
 
     //// Manage the stack's deployment that was created by new project wizard.
     // Get the current settings and then optionally add a path filter if needed.
