@@ -32,6 +32,8 @@ func NewStackSettings(ctx *pulumi.Context,
 }
 
 type stackSettingsArgs struct {
+	// Stack delete setting for automated purge processing.
+	DeleteStack *string `pulumi:"deleteStack"`
 	// Drift management setting for refresh or correction.
 	DriftManagement *string `pulumi:"driftManagement"`
 	// Pulumi access token to set up as a deployment environment variable if provided.
@@ -44,6 +46,8 @@ type stackSettingsArgs struct {
 
 // The set of arguments for constructing a StackSettings resource.
 type StackSettingsArgs struct {
+	// Stack delete setting for automated purge processing.
+	DeleteStack pulumi.StringPtrInput
 	// Drift management setting for refresh or correction.
 	DriftManagement pulumi.StringPtrInput
 	// Pulumi access token to set up as a deployment environment variable if provided.

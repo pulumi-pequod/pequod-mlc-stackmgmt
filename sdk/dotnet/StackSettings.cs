@@ -41,6 +41,12 @@ namespace Pulumi.Stackmgmt
     public sealed class StackSettingsArgs : global::Pulumi.ResourceArgs
     {
         /// <summary>
+        /// Stack delete setting for automated purge processing.
+        /// </summary>
+        [Input("deleteStack")]
+        public Input<string>? DeleteStack { get; set; }
+
+        /// <summary>
         /// Drift management setting for refresh or correction.
         /// </summary>
         [Input("driftManagement")]
