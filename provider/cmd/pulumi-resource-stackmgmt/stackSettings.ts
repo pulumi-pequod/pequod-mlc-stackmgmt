@@ -61,12 +61,21 @@ export class StackSettings extends pulumi.ComponentResource {
 
     // This stack tag indicates whether or not the purge automation should delete the stack.
     // Because the tag needs to remain on destroy and the provider balks if the stack tag already exists 
-    // (which would be the case on a pulumi up after a destroy), 
-    // the command provider is used to run pulumi cli to set the tag and not delete it on destroy.
+    // (which would be the case on a pulumi up after a destroy), using the pulumiservice provider for this tag is not feasible.
+    // So, the command provider is used to hit the Pulumi Cloud API set the tag and it is not deleted on destroy.
+    // Note: Calling "pulumi stack tag set" causes weirdness in the UI's graph view for resources.
     const stack_fqdn = `${org}/${project}/${stack}`
-    const tagValue = args.deleteStack || "True"
+    const pulumiAccessToken = process.env["PULUMI_ACCESS_TOKEN"] 
+    const tagName = "delete_stack"
+    const tagValue = "True"
     const addDeleteStackTag = new command.local.Command("addDeleteStackTag", {
-      create: `pulumi stack tag set delete_stack ${tagValue} --stack ${stack_fqdn}`
+      create: `curl \
+      -H "Accept: application/vnd.pulumi+8" \
+      -H "Content-Type: application/json" \
+      -H "Authorization: token ${pulumiAccessToken}" \
+      --request POST \
+      --data '{"name":"${tagName}","value":"${tagValue}"}' \
+      https://api.pulumi.com/api/stacks/${stack_fqdn}/tags`
     })
 
     //// Manage the stack's deployment that was created by new project wizard.
