@@ -23,6 +23,7 @@ export class StackSettings extends pulumi.ComponentResource {
     const org = "pequod" // Temporary. Will use getOrganization()
     const project = pulumi.getProject()
     const stack = pulumi.getStack()
+    const npwStack = "dev" // This is the stack that NPW creates initially.
 
     //// Set stack tag for expiration.
     // The stack manager processor looks for a "expiration" stack tag set to the time after which the stack should be destroyed.
@@ -125,7 +126,7 @@ export class StackSettings extends pulumi.ComponentResource {
         'Content-Type': 'application/json',
         'Authorization': `token ${process.env["PULUMI_ACCESS_TOKEN"]}`
       };
-      const stackDeploymentSettingsUrl = `https://api.pulumi.com/api/stacks/${org}/${project}/${stack}/deployments/settings`;
+      const stackDeploymentSettingsUrl = `https://api.pulumi.com/api/stacks/${org}/${project}/${npwStack}/deployments/settings`;
       const response = await fetch(stackDeploymentSettingsUrl, {
           method: "GET",
           headers,
@@ -136,7 +137,7 @@ export class StackSettings extends pulumi.ComponentResource {
           try {
               errMessage = await response.text();
           } catch { }
-          throw new Error(`failed to get deployment settings for stack, ${org}/${project}/${stack}: ${errMessage}`);
+          throw new Error(`failed to get deployment settings for stack, ${org}/${project}/${npwStack}: ${errMessage}`);
       } 
 
       const deploymentSettings: StackDeploymentSettings = await response.json();
@@ -148,14 +149,20 @@ export class StackSettings extends pulumi.ComponentResource {
         settings.gitHub.paths=[pathFilter]
       }
 
-      let operationContext = {}
-      const pulumiAccessToken = args.pulumiAccessToken
+      // if the stack being run doesn't match the stack that NPW created in the first place,
+      // modify the deployment settings to point at a branch name that matches the stack name.
+      if (stack != npwStack) {
+        settings.sourceContext.git.branch = stack
+      }
+
       // Setup deployment environment variable to support things like stack references.
+      const pulumiAccessToken = args.pulumiAccessToken
       let patEnvVar = {}
       if (pulumiAccessToken) {
         patEnvVar = { PULUMI_ACCESS_TOKEN: pulumiAccessToken }
       }
 
+      // Update the stack's deployment settings. 
       const deploySettings = new pulumiservice.DeploymentSettings(`${name}-deployment-settings`, {
         organization: org,
         project: project,
