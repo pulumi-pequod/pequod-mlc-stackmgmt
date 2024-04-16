@@ -141,7 +141,9 @@ export class StackSettings extends pulumi.ComponentResource {
     })
 
     // Set TTL and Drift schedules for the stack.
-    setStackSchedules({driftManagement: args.driftManagement, ttlMinutes: args.ttlMinutes})
+    if (!pulumi.runtime.isDryRun()) {
+      setStackSchedules({driftManagement: args.driftManagement, ttlMinutes: args.ttlMinutes})
+    }
 
     // If no team name given, then assign to the "DevTeam"
     const teamAssignment = args.teamAssignment ?? "DevTeam"

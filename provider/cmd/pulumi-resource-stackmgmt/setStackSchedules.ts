@@ -132,9 +132,7 @@ export function setStackSchedules(args: SetStackSchedulesArgs) {
       } 
     }
 
-    if (!pulumi.runtime.isDryRun()) {
-      setManagementSchedules()
-    }
+    setManagementSchedules()
 }
 
 
