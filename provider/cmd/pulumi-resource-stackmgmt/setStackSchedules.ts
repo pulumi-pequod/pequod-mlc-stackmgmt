@@ -87,7 +87,8 @@ export function setStackSchedules(args: SetStackSchedulesArgs) {
         // Call schedule API to set the TTL
         var ttlScheduleUrl = scheduleUrl
 
-        const ttlBody = `{"scheduleOnce":"${expirationTime}", "request":{"inheritSettings":true,"operation":"destroy","operationContext":{"options":{"deleteAfterDestroy":false}}}}`
+        // const ttlBody = `{"scheduleOnce":"${expirationTime}", "request":{"inheritSettings":true,"operation":"destroy","operationContext":{"options":{"deleteAfterDestroy":false}}}}`
+        const ttlBody = '{"scheduleOnce":"'+expirationTime+'", "request":{"inheritSettings":true,"operation":"destroy","operationContext":{"options":{"deleteAfterDestroy":false}}}}'
         var setResponse = await fetch(ttlScheduleUrl, {
             method: "POST",
             body: ttlBody,
