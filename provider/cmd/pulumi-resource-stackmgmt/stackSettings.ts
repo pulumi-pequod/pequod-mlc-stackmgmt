@@ -1,8 +1,8 @@
 // import { ComponentResource, ComponentResourceOptions, Output, getOrganization, getProject, getStack } from "@pulumi/pulumi";
 import * as pulumi from "@pulumi/pulumi";
 import * as pulumiservice from "@pulumi/pulumiservice";
-import * as command from "@pulumi/command";
 import fetch from "node-fetch";
+import {setStackSchedules} from "./setStackSchedules";
 
 // Interface for StackSettings
 export interface StackSettingsArgs{
@@ -24,41 +24,6 @@ export class StackSettings extends pulumi.ComponentResource {
     const project = pulumi.getProject()
     const stack = pulumi.getStack()
     const npwStack = "dev" // This is the stack that NPW creates initially.
-
-    //// Set stack tag for expiration.
-    // The stack manager processor looks for a "expiration" stack tag set to the time after which the stack should be destroyed.
-    // If not explicitly set as a configuration property, add 8 hours to now.
-    let ttlMinutes = args.ttlMinutes
-    if (!ttlMinutes) {
-      ttlMinutes = (8 * 60)
-    }
-    // Calculate milliseconds to add for linux time math
-    const millisecondsToAdd = ttlMinutes * 60 * 1000
-
-    // Calculate the UTC time after which this stack should be destroyed.
-    const nowTime = new Date()
-    const nowLinuxTime = nowTime.getTime()
-    const endLinuxTime = nowLinuxTime + millisecondsToAdd
-    const endDate = new Date(endLinuxTime)
-    const expirationTagSetting = endDate.toISOString()
-
-    // This stack tag tells the management service the time after which this stack should be terminated.
-    const expirationStackTag = new pulumiservice.StackTag(`${name}-ttl-stacktag`, {
-      organization: org,
-      project: project,
-      stack: stack,
-      name: "expiration",
-      value: expirationTagSetting
-    }, { parent: this, ignoreChanges: ["value"] })
-
-    // This stack tag tells the Drift Correction stack that this stack should be refreshed.
-    const refreshStackTag = new pulumiservice.StackTag(`${name}-driftmanagement-stacktag`, {
-      organization: org,
-      project: project,
-      stack: stack,
-      name: "drift_management",
-      value: args.driftManagement || "Correct", // do both refresh and correction by default.
-    }, { parent: this })
 
     // This stack tag indicates whether or not the purge automation should delete the stack.
     // Because the tag needs to remain on destroy and the provider balks if the stack tag already exists 
@@ -174,6 +139,9 @@ export class StackSettings extends pulumi.ComponentResource {
         sourceContext: settings.sourceContext,
       }, { parent: this, retainOnDelete: true }); // Retain on delete so that deploy actions are maintained.
     })
+
+    // Set TTL and Drift schedules for the stack.
+    setStackSchedules({driftManagement: args.driftManagement, ttlMinutes: args.ttlMinutes})
 
     // If no team name given, then assign to the "DevTeam"
     const teamAssignment = args.teamAssignment ?? "DevTeam"
