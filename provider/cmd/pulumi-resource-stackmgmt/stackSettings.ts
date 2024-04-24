@@ -140,10 +140,37 @@ export class StackSettings extends pulumi.ComponentResource {
       }, { parent: this, retainOnDelete: true }); // Retain on delete so that deploy actions are maintained.
     })
 
-    // Set TTL and Drift schedules for the stack.
-    if (!pulumi.runtime.isDryRun()) {
-      setStackSchedules({driftManagement: args.driftManagement, ttlMinutes: args.ttlMinutes})
+    // Set TTL schedule for the stack.
+    let ttlMinutes = args.ttlMinutes
+    if (!ttlMinutes) {
+      // If not set default to 8 hours from now
+      ttlMinutes = (8 * 60)
     }
+    const millisecondsToAdd = ttlMinutes * 60 * 1000
+    const nowTime = new Date()
+    const nowLinuxTime = nowTime.getTime()
+    const endLinuxTime = nowLinuxTime + millisecondsToAdd
+    const endDate = new Date(endLinuxTime)
+    const expirationTime = endDate.toISOString()
+    const ttlSchedule = new pulumiservice.TtlSchedule(`${name}-ttlschedule`, {
+      organization: org,
+      project: project,
+      stack: stack,
+      timestamp: expirationTime
+    })
+
+    // Set drift schedule
+    let remediation = true // assume we want to remediate
+    if ((args.driftManagement) && (args.driftManagement != "Correct")) {
+      remediation = false // only do drift detection
+    }
+    const driftSchedule = new pulumiservice.DriftSchedule(`${name}-driftschedule`, {
+      organization: org,
+      project: project,
+      stack: stack,
+      scheduleCron: "0 * * * *",
+      autoRemediate: remediation,
+    })
 
     // If no team name given, then assign to the "DevTeam"
     const teamAssignment = args.teamAssignment ?? "DevTeam"

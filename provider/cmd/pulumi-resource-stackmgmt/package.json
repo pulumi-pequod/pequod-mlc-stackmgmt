@@ -2,9 +2,9 @@
     "version": "${VERSION}",
     "bin": "bin/index.js",
     "dependencies": {
-        "@pulumi/pulumi": "^3.0.0",
-        "@pulumi/pulumiservice": "^0.16.0",
         "@pulumi/command": "^0.9.2",
+        "@pulumi/pulumi": "^3.0.0",
+        "@pulumi/pulumiservice": "^0.20.0",
         "@types/node-fetch": "^2.6.2",
         "node-fetch": "^2.6.2"
     },
