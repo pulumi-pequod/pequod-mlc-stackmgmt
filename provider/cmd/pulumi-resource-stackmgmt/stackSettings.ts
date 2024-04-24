@@ -2,7 +2,6 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as pulumiservice from "@pulumi/pulumiservice";
 import fetch from "node-fetch";
-import {setStackSchedules} from "./setStackSchedules";
 
 // Interface for StackSettings
 export interface StackSettingsArgs{
