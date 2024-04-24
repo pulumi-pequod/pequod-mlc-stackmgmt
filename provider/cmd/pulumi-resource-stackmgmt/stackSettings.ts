@@ -155,7 +155,8 @@ export class StackSettings extends pulumi.ComponentResource {
       organization: org,
       project: project,
       stack: stack,
-      timestamp: expirationTime
+      timestamp: expirationTime,
+      deleteAfterDestroy: false,
     })
 
     // Set drift schedule
