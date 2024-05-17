@@ -1,6 +1,7 @@
 // import { ComponentResource, ComponentResourceOptions, Output, getOrganization, getProject, getStack } from "@pulumi/pulumi";
 import * as pulumi from "@pulumi/pulumi";
 import * as pulumiservice from "@pulumi/pulumiservice";
+import { local } from "@pulumi/command";
 import fetch from "node-fetch";
 
 // Interface for StackSettings
@@ -142,7 +143,7 @@ export class StackSettings extends pulumi.ComponentResource {
     // Set TTL schedule for the stack.
     let ttlMinutes = args.ttlMinutes
     if (!ttlMinutes) {
-      // If not set default to 8 hours from now
+      // If not set default to 8 hours from initial launch
       ttlMinutes = (8 * 60)
     }
     const millisecondsToAdd = ttlMinutes * 60 * 1000
@@ -157,7 +158,7 @@ export class StackSettings extends pulumi.ComponentResource {
       stack: stack,
       timestamp: expirationTime,
       deleteAfterDestroy: false,
-    })
+    }, {parent: this, ignoreChanges: ["timestamp"]})
 
     // Set drift schedule
     let remediation = true // assume we want to remediate
@@ -170,7 +171,7 @@ export class StackSettings extends pulumi.ComponentResource {
       stack: stack,
       scheduleCron: "0 * * * *",
       autoRemediate: remediation,
-    })
+    }, {parent: this})
 
     // If no team name given, then assign to the "DevTeam"
     const teamAssignment = args.teamAssignment ?? "DevTeam"

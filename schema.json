@@ -38,7 +38,8 @@
         "csharp": {
             "packageReferences": {
                 "Pulumi": "3.*",
-                "Pulumi.PulumiService": "0.*"
+                "Pulumi.PulumiService": "0.*",
+                "Pulumi.Command": "0.*"
             },
             "respectSchemaVersion": true
         },
@@ -52,6 +53,7 @@
             "dependencies": {
                 "@pulumi/pulumi": "^3.0.0",
                 "@pulumi/pulumiservice": "^0.20.2",
+                "@pulumi/command": "^0.10.0",
                 "@types/node-fetch": "^2.6.2",
                 "node-fetch": "^2.6.2"
             },
@@ -66,7 +68,8 @@
             "packageName": "pequod_stackmgmt",
             "requires": {
                 "pulumi": ">=3.0.0,<4.0.0",
-                "pulumi-pulumiservice": ">=0.0.0,<1.0.0"
+                "pulumi-pulumiservice": ">=0.0.0,<1.0.0",
+                "pulumi-command": ">=0.0.0,<1.0.0"
             },
             "respectSchemaVersion": true
         }
