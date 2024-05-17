@@ -151,14 +151,16 @@ export class StackSettings extends pulumi.ComponentResource {
     const nowLinuxTime = nowTime.getTime()
     const endLinuxTime = nowLinuxTime + millisecondsToAdd
     const endDate = new Date(endLinuxTime)
-    const expirationTime = endDate.toISOString().slice(-5)+"Z"
+    // Tweak ISO time to match expected format for TtlSchedule resource.
+    // Basically takes it from YYYY-MM-DDTHH:MM:SS.mmmZ to YYYY-MM-DDTHH:MM:SSZ
+    const expirationTime = endDate.toISOString().slice(0,-5) + "Z"
     const ttlSchedule = new pulumiservice.TtlSchedule(`${name}-ttlschedule`, {
       organization: org,
       project: project,
       stack: stack,
       timestamp: expirationTime,
       deleteAfterDestroy: false,
-    }, {parent: this})
+    }, {parent: this, ignoreChanges: ["timestamp"]})
 
     // Set drift schedule
     let remediation = true // assume we want to remediate
