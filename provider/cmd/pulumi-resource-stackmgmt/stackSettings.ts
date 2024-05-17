@@ -1,8 +1,8 @@
 // import { ComponentResource, ComponentResourceOptions, Output, getOrganization, getProject, getStack } from "@pulumi/pulumi";
 import * as pulumi from "@pulumi/pulumi";
 import * as pulumiservice from "@pulumi/pulumiservice";
+import { local } from "@pulumi/command";
 import fetch from "node-fetch";
-import {setStackSchedules} from "./setStackSchedules";
 
 // Interface for StackSettings
 export interface StackSettingsArgs{
@@ -140,10 +140,40 @@ export class StackSettings extends pulumi.ComponentResource {
       }, { parent: this, retainOnDelete: true }); // Retain on delete so that deploy actions are maintained.
     })
 
-    // Set TTL and Drift schedules for the stack.
-    if (!pulumi.runtime.isDryRun()) {
-      setStackSchedules({driftManagement: args.driftManagement, ttlMinutes: args.ttlMinutes})
+    // Set TTL schedule for the stack.
+    let ttlMinutes = args.ttlMinutes
+    if (!ttlMinutes) {
+      // If not set default to 8 hours from initial launch
+      ttlMinutes = (8 * 60)
     }
+    const millisecondsToAdd = ttlMinutes * 60 * 1000
+    const nowTime = new Date()
+    const nowLinuxTime = nowTime.getTime()
+    const endLinuxTime = nowLinuxTime + millisecondsToAdd
+    const endDate = new Date(endLinuxTime)
+    // Tweak ISO time to match expected format for TtlSchedule resource.
+    // Basically takes it from YYYY-MM-DDTHH:MM:SS.mmmZ to YYYY-MM-DDTHH:MM:SSZ
+    const expirationTime = endDate.toISOString().slice(0,-5) + "Z"
+    const ttlSchedule = new pulumiservice.TtlSchedule(`${name}-ttlschedule`, {
+      organization: org,
+      project: project,
+      stack: stack,
+      timestamp: expirationTime,
+      deleteAfterDestroy: false,
+    }, {parent: this, ignoreChanges: ["timestamp"]})
+
+    // Set drift schedule
+    let remediation = true // assume we want to remediate
+    if ((args.driftManagement) && (args.driftManagement != "Correct")) {
+      remediation = false // only do drift detection
+    }
+    const driftSchedule = new pulumiservice.DriftSchedule(`${name}-driftschedule`, {
+      organization: org,
+      project: project,
+      stack: stack,
+      scheduleCron: "0 * * * *",
+      autoRemediate: remediation,
+    }, {parent: this})
 
     // If no team name given, then assign to the "DevTeam"
     const teamAssignment = args.teamAssignment ?? "DevTeam"

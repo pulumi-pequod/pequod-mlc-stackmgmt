@@ -32,6 +32,7 @@ setup(name='pequod_stackmgmt',
       install_requires=[
           'parver>=0.2.1',
           'pulumi>=3.0.0,<4.0.0',
+          'pulumi-command>=0.0.0,<1.0.0',
           'pulumi-pulumiservice>=0.0.0,<1.0.0',
           'semver>=2.8.1'
       ],
