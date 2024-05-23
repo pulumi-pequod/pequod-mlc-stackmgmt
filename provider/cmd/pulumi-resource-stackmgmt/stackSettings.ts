@@ -119,9 +119,7 @@ export class StackSettings extends pulumi.ComponentResource {
       // Set the stack's deployment settings with any changes from above.
       // Maybe a no-op.
       // But do not set deploymentsettings if this is a preview stack
-      pulumi.log.error("github settings: "+settings.gitHub.deployPullRequest)
-      
-      if (!settings.gitHub.deployPullRequest) {
+      if (!(settings.gitHub?.deployPullRequest)) {
         const deploySettings = new pulumiservice.DeploymentSettings(`${name}-deployment-settings`, {
           organization: org,
           project: project,
