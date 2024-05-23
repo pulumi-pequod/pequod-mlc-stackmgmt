@@ -120,18 +120,15 @@ export class StackSettings extends pulumi.ComponentResource {
       // Maybe a no-op.
       // But do not set deploymentsettings if this is a preview stack
       if (!(settings.gitHub?.deployPullRequest)) {
-        pulumi.log.error("property not found")
-        // const deploySettings = new pulumiservice.DeploymentSettings(`${name}-deployment-settings`, {
-        //   organization: org,
-        //   project: project,
-        //   stack: stack,
-        //   github: settings.gitHub,
-        //   operationContext: {},
-        //   sourceContext: settings.sourceContext,
-        // }, { parent: this, retainOnDelete: true }); // Retain on delete so that deploy actions are maintained.
-      } else {
-        pulumi.log.error("property found")
-      }
+        const deploySettings = new pulumiservice.DeploymentSettings(`${name}-deployment-settings`, {
+          organization: org,
+          project: project,
+          stack: stack,
+          github: settings.gitHub,
+          operationContext: {},
+          sourceContext: settings.sourceContext,
+        }, { parent: this, retainOnDelete: true }); // Retain on delete so that deploy actions are maintained.
+      } 
     })
 
     //// TTL Schedule ////
