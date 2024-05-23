@@ -20,10 +20,10 @@ make build
 make dist
 ```
 
-* Push/merge the code to the main branch.
 
 
 ## Publish the Plugins
+* Push/merge the code to the repo.
 * Create a new github release of this repo using the same version number in the Makefile.
 * Upload the files in the `dist` folder as attachments to the release.
 
@@ -50,6 +50,15 @@ TBD
 
 ### Go
 TBD
+
+## Testing Notes
+Easiest way to test is with a Python program.
+* Do all the `make` steps above.
+* Create a release as described above except:
+  * Point it at the branch you are developing on.
+  * Create it as a pre-release.
+* Git Clone a python project from pequod and modify the `requirements.txt` to include the tag for the pre-release you created above.
+* To test end-to-end NPW with the change, add the test project as a template and run NPW.
 
 ## TODOs
 * Add an example or two.

@@ -25,12 +25,13 @@ export class StackSettings extends pulumi.ComponentResource {
     const stack = pulumi.getStack()
     const npwStack = "dev" // This is the stack that NPW creates initially.
 
+    //// Purge Stack Tag ////
     // This stack tag indicates whether or not the purge automation should delete the stack.
     // Because the tag needs to remain on destroy and the provider balks if the stack tag already exists 
     // (which would be the case on a pulumi up after a destroy), using the pulumiservice provider for this tag is not feasible.
     // So, just hit the Pulumi Cloud API set the tag and that way it is not deleted on destroy.
     const stackFqdn = `${org}/${project}/${stack}`
-    const pulumiAccessToken = process.env["PULUMI_ACCESS_TOKEN"] 
+    const pulumiAccessToken = process.env["PULUMI_ACCESS_TOKEN"] // Deployments automatically creates an access token env variable
     const tagName = "delete_stack"
     const tagValue = args.deleteStack || "True"
     const setTag = async () => {
@@ -64,28 +65,12 @@ export class StackSettings extends pulumi.ComponentResource {
     }
     setTag()
     
-    //// Manage the stack's deployment that was created by new project wizard.
-    // Get the current settings and then optionally add a path filter if needed.
-    interface StackDeploymentSettings {
-      sourceContext: SourceContext
-      gitHub: GitHub
-      source: string
-    }
-    interface SourceContext {
-      git: Git
-    }
-    interface Git {
-      branch: string
-      repoDir?: string
-    }
-    interface GitHub {
-      repository: string
-      deployCommits: boolean
-      previewPullRequests: boolean
-      paths?: string[]
-    }
+    //// Deployment Settings Management ////
+    // If a new stack is created by the user (vs via review stacks), get the current settings and 
+    // configure the new stack's deployment settings based on the original settings. 
+
+    // Get current deployment settings
     const getDeploymentSettings = async () => {
-   
       const headers = {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -104,43 +89,49 @@ export class StackSettings extends pulumi.ComponentResource {
           } catch { }
           throw new Error(`failed to get deployment settings for stack, ${org}/${project}/${npwStack}: ${errMessage}`);
       } 
-
+    
       const deploymentSettings: StackDeploymentSettings = await response.json();
       return deploymentSettings
     }
+
+    // Get the current deployment settings and modify if needed
     const deploymentSettings = getDeploymentSettings().then(settings => { 
-      if (settings.sourceContext.git.repoDir) {
-        const pathFilter = `${settings.sourceContext.git.repoDir}/**`
-        settings.gitHub.paths=[pathFilter]
-      }
+      /// TESTING: Shouldn't be needed so can remove
+      // if (settings.sourceContext.git.repoDir) {
+      //   const pathFilter = `${settings.sourceContext.git.repoDir}/**`
+      //   settings.gitHub.paths=[pathFilter]
+      // }
 
-      // if the stack being run doesn't match the stack that NPW created in the first place,
+      // If the stack being run doesn't match the stack that NPW created in the first place, 
+      // and it is NOT a review stack, then
       // modify the deployment settings to point at a branch name that matches the stack name.
-      if (stack != npwStack) {
-        settings.sourceContext.git.branch = stack
+      if (!settings.gitHub.deployPullRequest) {
+        if (stack != npwStack) {
+          settings.sourceContext.git.branch = stack
+        }
       }
 
-      // Setup deployment environment variable to support things like stack references.
-      const pulumiAccessToken = args.pulumiAccessToken
-      let patEnvVar = {}
-      if (pulumiAccessToken) {
-        patEnvVar = { PULUMI_ACCESS_TOKEN: pulumiAccessToken }
-      }
+      /// TESTING: Shouldn't be needed so can remove
+      // // Setup deployment environment variable to support things like stack references.
+      // const pulumiAccessToken = args.pulumiAccessToken
+      // let patEnvVar = {}
+      // if (pulumiAccessToken) {
+      //   patEnvVar = { PULUMI_ACCESS_TOKEN: pulumiAccessToken }
+      // }
 
-      // Update the stack's deployment settings. 
+      // Set the stack's deployment settings with any changes from above.
+      // Maybe a no-op.
       const deploySettings = new pulumiservice.DeploymentSettings(`${name}-deployment-settings`, {
         organization: org,
         project: project,
         stack: stack,
         github: settings.gitHub,
-        operationContext: {
-          environmentVariables: patEnvVar
-        },        
+        operationContext: {},
         sourceContext: settings.sourceContext,
       }, { parent: this, retainOnDelete: true }); // Retain on delete so that deploy actions are maintained.
     })
 
-    // Set TTL schedule for the stack.
+    //// TTL Schedule ////
     let ttlMinutes = args.ttlMinutes
     if (!ttlMinutes) {
       // If not set default to 8 hours from initial launch
@@ -162,7 +153,7 @@ export class StackSettings extends pulumi.ComponentResource {
       deleteAfterDestroy: false,
     }, {parent: this, ignoreChanges: ["timestamp"]})
 
-    // Set drift schedule
+    //// Drift Schedule ////
     let remediation = true // assume we want to remediate
     if ((args.driftManagement) && (args.driftManagement != "Correct")) {
       remediation = false // only do drift detection
@@ -175,6 +166,7 @@ export class StackSettings extends pulumi.ComponentResource {
       autoRemediate: remediation,
     }, {parent: this})
 
+    //// Team Stack Assignment ////
     // If no team name given, then assign to the "DevTeam"
     const teamAssignment = args.teamAssignment ?? "DevTeam"
     const teamStackAssignment = new pulumiservice.TeamStackPermission(`${name}-team-stack-assign`, {
@@ -188,3 +180,26 @@ export class StackSettings extends pulumi.ComponentResource {
     this.registerOutputs({});
   }
 }
+
+// Deployment Settings API Related //
+interface StackDeploymentSettings {
+  sourceContext: SourceContext
+  gitHub: GitHub
+  source: string
+}
+interface SourceContext {
+  git: Git
+}
+interface Git {
+  branch: string
+  repoDir?: string
+}
+interface GitHub {
+  repository: string
+  deployCommits: boolean
+  previewPullRequests: boolean
+  deployPullRequest?: number
+  paths?: string[]
+}
+
+
