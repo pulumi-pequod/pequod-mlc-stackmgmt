@@ -20,8 +20,6 @@ make build
 make dist
 ```
 
-
-
 ## Publish the Plugins
 * Push/merge the code to the repo.
 * Create a new github release of this repo using the same version number in the Makefile.
