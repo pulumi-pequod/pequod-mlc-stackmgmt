@@ -59,7 +59,7 @@ Easiest way to test is with a Python program.
   * Create it as a pre-release.
 * Git Clone a python project from pequod and modify the `requirements.txt` to include the tag for the pre-release you created above.
   * e.g. `pequod_stackmgmt @ git+https://github.com/pulumi-pequod/pequod-mlc-stackmgmt.git@v3.1.1#subdirectory=sdk/python/bin`
-    * NOTE the `@3.1.1` - this would be whatever tag used for the given pre-release.
+    * NOTE the `@v3.1.1` - this would be whatever tag used for the given pre-release.
 
 ## TODOs
 * Add an example or two.

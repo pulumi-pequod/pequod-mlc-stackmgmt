@@ -103,12 +103,9 @@ export class StackSettings extends pulumi.ComponentResource {
       // }
 
       // If the stack being run doesn't match the stack that NPW created in the first place, 
-      // and it is NOT a review stack, then
       // modify the deployment settings to point at a branch name that matches the stack name.
-      if (!settings.gitHub.deployPullRequest) {
-        if (stack != npwStack) {
-          settings.sourceContext.git.branch = stack
-        }
+      if (stack != npwStack) {
+        settings.sourceContext.git.branch = "refs/heads/"+stack
       }
 
       /// TESTING: Shouldn't be needed so can remove
@@ -121,14 +118,17 @@ export class StackSettings extends pulumi.ComponentResource {
 
       // Set the stack's deployment settings with any changes from above.
       // Maybe a no-op.
-      const deploySettings = new pulumiservice.DeploymentSettings(`${name}-deployment-settings`, {
-        organization: org,
-        project: project,
-        stack: stack,
-        github: settings.gitHub,
-        operationContext: {},
-        sourceContext: settings.sourceContext,
-      }, { parent: this, retainOnDelete: true }); // Retain on delete so that deploy actions are maintained.
+      // But do not set deploymentsettings if this is a preview stack
+      if (!settings.gitHub.deployPullRequest) {
+        const deploySettings = new pulumiservice.DeploymentSettings(`${name}-deployment-settings`, {
+          organization: org,
+          project: project,
+          stack: stack,
+          github: settings.gitHub,
+          operationContext: {},
+          sourceContext: settings.sourceContext,
+        }, { parent: this, retainOnDelete: true }); // Retain on delete so that deploy actions are maintained.
+      }
     })
 
     //// TTL Schedule ////

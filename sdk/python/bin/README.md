@@ -58,7 +58,8 @@ Easiest way to test is with a Python program.
   * Point it at the branch you are developing on.
   * Create it as a pre-release.
 * Git Clone a python project from pequod and modify the `requirements.txt` to include the tag for the pre-release you created above.
-* To test end-to-end NPW with the change, add the test project as a template and run NPW.
+  * e.g. `pequod_stackmgmt @ git+https://github.com/pulumi-pequod/pequod-mlc-stackmgmt.git@v3.1.1#subdirectory=sdk/python/bin`
+    * NOTE the `@v3.1.1` - this would be whatever tag used for the given pre-release.
 
 ## TODOs
 * Add an example or two.
