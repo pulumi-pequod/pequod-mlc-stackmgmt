@@ -3,6 +3,7 @@ import * as pulumi from "@pulumi/pulumi";
 import * as pulumiservice from "@pulumi/pulumiservice";
 import { local } from "@pulumi/command";
 import fetch from "node-fetch";
+import { jsonStringify } from "@pulumi/pulumi";
 
 // Interface for StackSettings
 export interface StackSettingsArgs{
@@ -107,6 +108,13 @@ export class StackSettings extends pulumi.ComponentResource {
       if (stack != npwStack) {
         settings.sourceContext.git.branch = "refs/heads/"+stack
       }
+
+      jsonStringify(settings).apply(settings => {
+        tagValue = settings
+        tagName = "settings"
+        setTag()
+      })
+
 
       /// TESTING: Shouldn't be needed so can remove
       // // Setup deployment environment variable to support things like stack references.
