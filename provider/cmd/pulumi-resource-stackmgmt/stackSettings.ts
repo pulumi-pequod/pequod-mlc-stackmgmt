@@ -100,6 +100,9 @@ export class StackSettings extends pulumi.ComponentResource {
         // modify the deployment settings to point at a branch name that matches the stack name.
         if (stack != npwStack) {
           settings.sourceContext.git.branch = "refs/heads/"+stack
+        } else {
+          // Set the "main" stack as the template for review stacks.
+          settings.gitHub.pullRequestTemplate = true
         }
 
         // Set the stack's deployment settings with any changes from above.
@@ -184,6 +187,7 @@ interface GitHub {
   deployCommits: boolean
   previewPullRequests: boolean
   deployPullRequest?: number
+  pullRequestTemplate?: boolean
   paths?: string[]
 }
 
