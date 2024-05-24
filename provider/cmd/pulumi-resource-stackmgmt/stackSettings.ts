@@ -98,25 +98,11 @@ export class StackSettings extends pulumi.ComponentResource {
     // But, only if this is NOT a review stack. Review stacks we just leave be.
     if (!(stack.includes(`pr-pulumi-${org}-${project}`))) {
       const deploymentSettings = getDeploymentSettings().then(settings => { 
-        /// TESTING: Shouldn't be needed so can remove
-        // if (settings.sourceContext.git.repoDir) {
-        //   const pathFilter = `${settings.sourceContext.git.repoDir}/**`
-        //   settings.gitHub.paths=[pathFilter]
-        // }
-
         // If the stack being run doesn't match the stack that NPW created in the first place, 
         // modify the deployment settings to point at a branch name that matches the stack name.
         if (stack != npwStack) {
           settings.sourceContext.git.branch = "refs/heads/"+stack
         }
-
-        /// TESTING: Shouldn't be needed so can remove
-        // // Setup deployment environment variable to support things like stack references.
-        // const pulumiAccessToken = args.pulumiAccessToken
-        // let patEnvVar = {}
-        // if (pulumiAccessToken) {
-        //   patEnvVar = { PULUMI_ACCESS_TOKEN: pulumiAccessToken }
-        // }
 
         // Set the stack's deployment settings with any changes from above.
         // Maybe a no-op.
