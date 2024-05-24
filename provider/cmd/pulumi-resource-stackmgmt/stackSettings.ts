@@ -1,9 +1,7 @@
 // import { ComponentResource, ComponentResourceOptions, Output, getOrganization, getProject, getStack } from "@pulumi/pulumi";
 import * as pulumi from "@pulumi/pulumi";
 import * as pulumiservice from "@pulumi/pulumiservice";
-import { local } from "@pulumi/command";
 import fetch from "node-fetch";
-import { jsonStringify } from "@pulumi/pulumi";
 
 // Interface for StackSettings
 export interface StackSettingsArgs{
