@@ -19,18 +19,20 @@ export class StackSettings extends pulumi.ComponentResource {
     super("pequod:stackmgmt:stacksettings", name, args, opts);
 
     // Settings used below
+    const npwStack = "dev" // This is the stack that NPW creates initially.
     const org = "pequod" // Temporary. Will use getOrganization()
     const project = pulumi.getProject()
-    const stack = pulumi.getStack()
-    const npwStack = "dev" // This is the stack that NPW creates initially.
+    const stack = pulumi.getStack() // this is the stack that is running
+    const stackFqdn = `${org}/${project}/${stack}`
+
+    // This may be the deployments automatically created access token or it may be one that is injected via config/environments
+    const pulumiAccessToken = process.env["PULUMI_ACCESS_TOKEN"] || "notokenfound"
 
     //// Purge Stack Tag ////
     // This stack tag indicates whether or not the purge automation should delete the stack.
     // Because the tag needs to remain on destroy and the provider balks if the stack tag already exists 
     // (which would be the case on a pulumi up after a destroy), using the pulumiservice provider for this tag is not feasible.
     // So, just hit the Pulumi Cloud API set the tag and that way it is not deleted on destroy.
-    const stackFqdn = `${org}/${project}/${stack}`
-    const pulumiAccessToken = process.env["PULUMI_ACCESS_TOKEN"] // Deployments automatically creates an access token env variable
     let tagName = "delete_stack"
     let tagValue = args.deleteStack || "True"
     const setTag = async () => {
@@ -110,7 +112,11 @@ export class StackSettings extends pulumi.ComponentResource {
           project: project,
           stack: stack,
           github: settings.gitHub,
-          operationContext: {},
+          operationContext: {
+            // Add the access token from the environment as an env variable for the deployment.
+            // This overrides the deployment stack token to enable accessing the template stack's config for review stacks and to enable stack references (where needed) 
+            environmentVariables: { ...settings.operationContext.environmentVariables, ...{PULUMI_ACCESS_TOKEN: pulumi.secret(pulumiAccessToken)}}
+          },
           sourceContext: settings.sourceContext,
         }, { parent: this, retainOnDelete: true }); // Retain on delete so that deploy actions are maintained.
       })
@@ -168,9 +174,15 @@ export class StackSettings extends pulumi.ComponentResource {
 
 // Deployment Settings API Related //
 interface StackDeploymentSettings {
+  operationContext: OperationContext
   sourceContext: SourceContext
   gitHub: GitHub
   source: string
+}
+interface OperationContext {
+  oidc?: object
+  environmentVariables?: pulumi.Input<{ [key: string]: pulumi.Input<string>; }>
+  options?: object
 }
 interface SourceContext {
   git: Git
