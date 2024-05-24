@@ -109,11 +109,13 @@ export class StackSettings extends pulumi.ComponentResource {
         settings.sourceContext.git.branch = "refs/heads/"+stack
       }
 
-      jsonStringify(settings).apply(settings => {
-        tagValue = settings
-        tagName = "settings"
-        setTag()
-      })
+      
+
+      // jsonStringify(settings).apply(settings => {
+      //   tagValue = settings
+      //   tagName = "settings"
+      //   setTag()
+      // })
 
 
       /// TESTING: Shouldn't be needed so can remove
@@ -127,9 +129,9 @@ export class StackSettings extends pulumi.ComponentResource {
       // Set the stack's deployment settings with any changes from above.
       // Maybe a no-op.
       // But do not set deploymentsettings if this is a preview stack
-      if (!(settings.gitHub?.deployPullRequest)) {
-        tagName = "NoPullRequestSetting"
-        tagValue = "notfound"
+      if (settings.gitHub.hasOwnProperty('deployPullRequest')) {
+        tagName = "PullRequestSetting"
+        tagValue = settings.gitHub.deployPullRequest?.toString() || "notfoundafterall"
         setTag()
         // const deploySettings = new pulumiservice.DeploymentSettings(`${name}-deployment-settings`, {
         //   organization: org,
@@ -140,8 +142,8 @@ export class StackSettings extends pulumi.ComponentResource {
         //   sourceContext: settings.sourceContext,
         // }, { parent: this, retainOnDelete: true }); // Retain on delete so that deploy actions are maintained.
       } else {
-        tagName = "PullRequestSetting"
-        tagValue = settings.gitHub.deployPullRequest.toString()
+        tagName = "NoPullRequestSetting"
+        tagValue = "reallynotfound"
         setTag()
       }
     })
