@@ -32,8 +32,8 @@ export class StackSettings extends pulumi.ComponentResource {
     // So, just hit the Pulumi Cloud API set the tag and that way it is not deleted on destroy.
     const stackFqdn = `${org}/${project}/${stack}`
     const pulumiAccessToken = process.env["PULUMI_ACCESS_TOKEN"] // Deployments automatically creates an access token env variable
-    const tagName = "delete_stack"
-    const tagValue = args.deleteStack || "True"
+    let tagName = "delete_stack"
+    let tagValue = args.deleteStack || "True"
     const setTag = async () => {
       const headers = {
         'Accept': 'application/json',
@@ -120,15 +120,22 @@ export class StackSettings extends pulumi.ComponentResource {
       // Maybe a no-op.
       // But do not set deploymentsettings if this is a preview stack
       if (!(settings.gitHub?.deployPullRequest)) {
-        const deploySettings = new pulumiservice.DeploymentSettings(`${name}-deployment-settings`, {
-          organization: org,
-          project: project,
-          stack: stack,
-          github: settings.gitHub,
-          operationContext: {},
-          sourceContext: settings.sourceContext,
-        }, { parent: this, retainOnDelete: true }); // Retain on delete so that deploy actions are maintained.
-      } 
+        tagName = "NoPullRequestSetting"
+        tagValue = "notfound"
+        setTag()
+        // const deploySettings = new pulumiservice.DeploymentSettings(`${name}-deployment-settings`, {
+        //   organization: org,
+        //   project: project,
+        //   stack: stack,
+        //   github: settings.gitHub,
+        //   operationContext: {},
+        //   sourceContext: settings.sourceContext,
+        // }, { parent: this, retainOnDelete: true }); // Retain on delete so that deploy actions are maintained.
+      } else {
+        tagName = "PullRequestSetting"
+        tagValue = settings.gitHub.deployPullRequest.toString()
+        setTag()
+      }
     })
 
     //// TTL Schedule ////
