@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: pequod_stackmgmt
-Version: 3.1.0
+Version: 3.1.1
 Requires-Python: >=3.7
 Description-Content-Type: text/markdown
 Requires-Dist: parver>=0.2.1
@@ -31,10 +31,8 @@ make build
 make dist
 ```
 
-* Push/merge the code to the main branch.
-
-
 ## Publish the Plugins
+* Push/merge the code to the repo.
 * Create a new github release of this repo using the same version number in the Makefile.
 * Upload the files in the `dist` folder as attachments to the release.
 
@@ -61,6 +59,16 @@ TBD
 
 ### Go
 TBD
+
+## Testing Notes
+Easiest way to test is with a Python program.
+* Do all the `make` steps above.
+* Create a release as described above except:
+  * Point it at the branch you are developing on.
+  * Create it as a pre-release.
+* Git Clone a python project from pequod and modify the `requirements.txt` to include the tag for the pre-release you created above.
+  * e.g. `pequod_stackmgmt @ git+https://github.com/pulumi-pequod/pequod-mlc-stackmgmt.git@v3.1.1#subdirectory=sdk/python/bin`
+    * NOTE the `@v3.1.1` - this would be whatever tag used for the given pre-release.
 
 ## TODOs
 * Add an example or two.
