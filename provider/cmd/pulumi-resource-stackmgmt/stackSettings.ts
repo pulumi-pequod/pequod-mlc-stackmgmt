@@ -26,7 +26,7 @@ export class StackSettings extends pulumi.ComponentResource {
     const stackFqdn = `${org}/${project}/${stack}`
 
     // This may be the deployments automatically created access token or it may be one that is injected via config/environments
-    const pulumiAccessToken = process.env["PULUMI_ACCESS_TOKEN"]
+    const pulumiAccessToken = process.env["PULUMI_ACCESS_TOKEN"] || "notokenfound"
 
     //// Purge Stack Tag ////
     // This stack tag indicates whether or not the purge automation should delete the stack.
@@ -104,12 +104,6 @@ export class StackSettings extends pulumi.ComponentResource {
           settings.sourceContext.git.branch = "refs/heads/"+stack
         } 
 
-        // Add the access token from the environment as an env variable for the deployment.
-        // This overrides the deployment stack token to enable accessing the template stack's config for review stacks and to enable stack references (where needed) 
-        settings.operationContext.environmentVariables = {
-          PULUMI_ACCESS_TOKEN: pulumi.secret(pulumiAccessToken)
-        }
-
         // Set the stack's deployment settings with any changes from above.
         // Maybe a no-op.
         // But do not set deploymentsettings if this is a preview stack
@@ -118,7 +112,11 @@ export class StackSettings extends pulumi.ComponentResource {
           project: project,
           stack: stack,
           github: settings.gitHub,
-          operationContext: {},
+          operationContext: {
+            // Add the access token from the environment as an env variable for the deployment.
+            // This overrides the deployment stack token to enable accessing the template stack's config for review stacks and to enable stack references (where needed) 
+            environmentVariables: { ...settings.operationContext.environmentVariables, ...{PULUMI_ACCESS_TOKEN: pulumi.secret(pulumiAccessToken)}}
+          },
           sourceContext: settings.sourceContext,
         }, { parent: this, retainOnDelete: true }); // Retain on delete so that deploy actions are maintained.
       })
@@ -182,9 +180,9 @@ interface StackDeploymentSettings {
   source: string
 }
 interface OperationContext {
-  oidc: object
-  environmentVariables: object
-  options: object
+  oidc?: object
+  environmentVariables?: pulumi.Input<{ [key: string]: pulumi.Input<string>; }>
+  options?: object
 }
 interface SourceContext {
   git: Git
