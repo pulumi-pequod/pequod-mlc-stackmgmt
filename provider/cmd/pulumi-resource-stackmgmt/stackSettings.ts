@@ -115,8 +115,8 @@ export class StackSettings extends pulumi.ComponentResource {
           operationContext: {
             // Add the access token from the environment as an env variable for the deployment.
             // This overrides the deployment stack token to enable accessing the template stack's config for review stacks and to enable stack references (where needed) 
-            environmentVariables: { ...settings.operationContext.environmentVariables, ...{PULUMI_ACCESS_TOKEN: pulumi.secret(pulumiAccessToken)}}
-            // environmentVariables: { PULUMI_ACCESS_TOKEN: pulumi.secret(pulumiAccessToken) }
+            // environmentVariables: { ...settings.operationContext.environmentVariables, ...{PULUMI_ACCESS_TOKEN: pulumi.secret(pulumiAccessToken)}}
+            environmentVariables: { PULUMI_ACCESS_TOKEN: pulumi.secret(pulumiAccessToken) }
           },
           sourceContext: settings.sourceContext,
         }, { parent: this, retainOnDelete: true }); // Retain on delete so that deploy actions are maintained.
