@@ -47,9 +47,16 @@ Refer to the `pequod-templates` repo for `requirements.txt` and code examples of
 .NET packages are managed in a github package in the Pequod org.
 For details of using Github for nuget packages, see https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry
 
-To publish a new package, use the provided helper script and run the following command:
-* `esc run pequod/github-package-mgmt -- ./publish_nuget.sh VERSION`
-  * Where `VERSION` is the version for the given package as specified in the Makefile (e.g. `3.1.4`).
+To publish a new package: 
+* Generate a github (classic) personal access token since that is required at this time.
+  * It must have `write:packages` (and `read:packages` and `repo` permissions which will be automatically set).
+* Set the following environment variables:
+  * `GITHUB_PACKAGE_TOKEN_USERNAME` - Github username for which the access token was generated
+  * `GITHUB_PACKAGE_TOKEN` - access token
+  * NOTE: Pulumi environment can be used to set these env variables and make life easier.
+* Use the provided helper function: 
+  * `./publish_nuget.sh VERSION`
+    * Where `VERSION` is the version for the given package as specified in the Makefile (e.g. `3.1.4`).
 
 ### Go
 TBD
@@ -69,6 +76,14 @@ Easiest way to test is with a Python program.
 * Add some documentation.
 
 ## Troubleshooting
+* Publishing .net package errors
+  * If the add source throws an error you may already have the `github` source added.
+    * helpful commands: 
+      * `dotnet nuget list source`
+      * `dotnet nuget remove source github`
+  * If unauthorized error, the personal access token my need to be accepted in the pulumi-pequod github org.
+    * Go to the github org settings and look at personal access tokens
+
 * Get netcoreapp3.1 compatibility error message
   * cd to provider
   * modify go.mod with latest pulumi version
