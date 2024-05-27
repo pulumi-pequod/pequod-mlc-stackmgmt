@@ -36,6 +36,7 @@
     },
     "language": {
         "csharp": {
+            "rootNamespace": "Pequod",
             "packageReferences": {
                 "Pulumi": "3.*",
                 "Pulumi.PulumiService": "0.*",

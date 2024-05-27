@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi.Serialization;
+using Pulumi;
 
-namespace Pulumi.Stackmgmt
+namespace Pequod.Stackmgmt
 {
     [StackmgmtResourceType("pulumi:providers:stackmgmt")]
     public partial class Provider : global::Pulumi.ProviderResource

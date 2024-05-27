@@ -14,7 +14,7 @@ From the main directory (where the Makefile is located), do the following:
 ```bash
 # Regen the SDKs
 make generate
-make build
+make install
 
 # Rebuild the plugins
 make dist
@@ -44,7 +44,12 @@ The build process above sets things up for this.
 Refer to the `pequod-templates` repo for `requirements.txt` and code examples of how to use this package.
 
 ### .NET
-TBD
+.NET packages are managed in a github package in the Pequod org.
+For details of using Github for nuget packages, see https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry
+
+To publish a new package, use the provided helper script and run the following command:
+* `esc run pequod/github-package-mgmt -- ./publish_nuget.sh VERSION`
+  * Where `VERSION` is the version for the given package as specified in the Makefile (e.g. `3.1.4`).
 
 ### Go
 TBD
