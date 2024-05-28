@@ -5,3 +5,5 @@ It ensures stacks are configured as follows:
 * A "drift with remediation" schedule is set
 * The delete_stack stack tag is set so the stack, project and repo are automatically cleaned up overnight.
 * Adds the stack to the DevTeam team.
+
+The core component is written in Typescript.
