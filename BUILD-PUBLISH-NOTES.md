@@ -14,6 +14,7 @@ From the main directory (where the Makefile is located), do the following:
 ```bash
 # Regen the SDKs
 make generate
+make build
 make install
 
 # Rebuild the plugins
