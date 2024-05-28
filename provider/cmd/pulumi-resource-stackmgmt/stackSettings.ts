@@ -115,6 +115,7 @@ export class StackSettings extends pulumi.ComponentResource {
           operationContext: {
             // Add the access token from the environment as an env variable for the deployment.
             // This overrides the deployment stack token to enable accessing the template stack's config for review stacks and to enable stack references (where needed) 
+            // Keeping for future reference, but this following code does not play well with the .NET SDK generation. It'll throw an error about type is not a string.
             // environmentVariables: { ...settings.operationContext.environmentVariables, ...{PULUMI_ACCESS_TOKEN: pulumi.secret(pulumiAccessToken)}}
             environmentVariables: { PULUMI_ACCESS_TOKEN: pulumi.secret(pulumiAccessToken) }
           },
