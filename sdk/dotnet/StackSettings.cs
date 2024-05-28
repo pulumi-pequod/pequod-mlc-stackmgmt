@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi.Serialization;
+using Pulumi;
 
-namespace Pulumi.Stackmgmt
+namespace Pequod.Stackmgmt
 {
     [StackmgmtResourceType("stackmgmt:index:StackSettings")]
     public partial class StackSettings : global::Pulumi.ComponentResource
