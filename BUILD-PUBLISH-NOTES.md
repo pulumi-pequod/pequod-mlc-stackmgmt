@@ -60,7 +60,7 @@ To publish a new package:
     * Where `VERSION` is the version for the given package as specified in the Makefile (e.g. `3.1.4`).
 
 ### Go
-TBD
+No additional steps are needed. The build and release steps above sets up the Go packaging.
 
 ## Testing Notes
 Easiest way to test is with a Python program.
