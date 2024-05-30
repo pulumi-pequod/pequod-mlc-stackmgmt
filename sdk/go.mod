@@ -1,4 +1,4 @@
-module github.com/pulumi-pequod/pequod-mlc-stackmgmt/sdk/v3
+module github.com/pulumi-pequod/pequod-mlc-stackmgmt
 
 go 1.21
 
