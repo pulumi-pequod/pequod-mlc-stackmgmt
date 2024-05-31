@@ -7,3 +7,14 @@ It ensures stacks are configured as follows:
 * Adds the stack to the DevTeam team.
 
 The core component is written in Typescript.
+
+
+## Usage
+
+### Python
+Pequod uses basic github distribution for the Python SDKs.
+
+To use 
+`pequod_stackmgmt @ git+https://github.com/pulumi-pequod/pequod-mlc-stackmgmt.git#subdirectory=sdk/python/bin`
+
+### Typescript

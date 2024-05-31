@@ -7,3 +7,64 @@ It ensures stacks are configured as follows:
 * Adds the stack to the DevTeam team.
 
 The core component is written in Typescript.
+
+
+## Usage
+
+### Python
+Pequod uses basic github distribution for the Python SDKs.
+
+To use with Python, add the following to the Pulumi project's `requirements.txt` file:
+* `pequod_stackmgmt @ git+https://github.com/pulumi-pequod/pequod-mlc-stackmgmt.git#subdirectory=sdk/python/bin`
+
+### Typescript
+Pequod uses AWS Code Artifact for Typescript package distribution.  
+Since accesing the code artifact packages requires authenticating to AWS, the packages are installed via script in the `package.json`.  
+To install this package use the following:
+```
+    "scripts": {
+        "preinstall": "npm run esc:install && npm run esc:login", 
+        "esc:install": "curl -fsSL https://get.pulumi.com/esc/install.sh | sh",
+        "esc:login": "esc login",
+        "install": "npm run esc:cologin && npm run copkgs:install",
+        "esc:cologin": "esc run pequod/aws-access -- npm run co:login",
+        "co:login": "aws codeartifact login --tool npm --region us-east-2 --repository pequod-codeartifact-repo --domain pequod-codeartifact-domain",
+        "copkgs:install": "npm i @pequod/stackmgmt --no-save"
+    },
+```
+
+Note the `"esc:cologin"` line which uses an ESC environment in the organization that provides AWS access (OIDC in the case of `pequod/aws-access`)
+
+### .NET
+.NET packages are distributed using Github packages.  
+This requires authorizing to the GITHUB before adding as a source.  
+So the `.csproj` should look like the following:
+```
+<Project InitialTargets="AddGithubPackageSources" Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <!-- Set up the github package sources for components used by this template. -->
+    <Target Name="AddGithubPackageSources">
+        <Message Text="Adding Pequod.Stackmgmt source" />
+        <Exec Command="./pkg-utils/add_github_pkg.sh Pequod.Stackmgmt pequod/github-package-install" />
+    </Target> 
+
+    <ItemGroup>
+        <PackageReference Include="Pequod.Stackmgmt" Version="*"/>
+    </ItemGroup>
+</Project>
+```
+
+Note the `InitialTargets` setting. And the `./pkg-utils/add_github_pkg.sh` script basically runs:  
+```
+# Set up environment variables for GITHUB ACCESS using an environment that sets GIHTUB_USERNAME and GITHUB_TOKEN with a user and personal access token with read permissions for the github organization's packages.
+eval "$(pulumi env open ${2} -f shell)"
+# Add the source so csproj reference will find the package
+dotnet nuget add source --username $GITHUB_USERNAME --password $GITHUB_TOKEN --store-password-in-clear-text --name ${1} https://nuget.pkg.github.com/pulumi-pequod/index.json
+```
+
+### GO

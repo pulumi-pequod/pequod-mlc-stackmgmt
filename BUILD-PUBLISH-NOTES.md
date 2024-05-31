@@ -7,6 +7,9 @@ Whenever the component code (under provider/cmd/pulumi-resource...) or schema.js
 * Publish the plugins
 * Publish the SDKs
 
+### Special Go Package Notes
+If moving to a new major version, e.g. moving from `v3.x.x` to `v4.x.x` then update the module name in `sdk/go/go.mod` to match the major version.
+
 ## Build SDKs and Plugins
 From the main directory (where the Makefile is located), do the following:
 * Update `VERSION` in the Makefile to the next release.
@@ -60,7 +63,10 @@ To publish a new package:
     * Where `VERSION` is the version for the given package as specified in the Makefile (e.g. `3.1.4`).
 
 ### Go
-No additional steps are needed. The build and release steps above sets up the Go packaging.
+* `git tag vVERSION` 
+  * E.g. `git tag sdk/v3.1.4`
+* `git push origin vVERSION`
+  * E.g. `git push origin sdk/v3.1.4`
 
 ## Testing Notes
 Easiest way to test is with a Python program.
