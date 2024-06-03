@@ -46,7 +46,7 @@
         },
         "go": {
             "generateResourceContainerTypes": true,
-            "importBasePath": "github.com/pulumi-pequod/pequod-mlc-stackmgmt/sdk/v3/go/stackmgmt",
+            "importBasePath": "github.com/pulumi-pequod/pequod-mlc-stackmgmt/sdk/go/stackmgmt",
             "respectSchemaVersion": true
         },
         "nodejs": {
