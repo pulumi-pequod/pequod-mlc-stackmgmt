@@ -4,7 +4,6 @@ go 1.21
 
 require (
 	github.com/blang/semver v3.5.1+incompatible
-	github.com/pulumi-pequod/pequod-mlc-stackmgmt/sdk/v3 v3.1.10
 	github.com/pulumi/pulumi/sdk/v3 v3.116.1
 )
 
