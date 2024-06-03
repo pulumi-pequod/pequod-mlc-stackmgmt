@@ -1,9 +1,10 @@
-module github.com/pulumi-pequod/pequod-mlc-stackmgmt/sdk
+module github.com/pulumi-pequod/pequod-mlc-stackmgmt
 
 go 1.21
 
 require (
 	github.com/blang/semver v3.5.1+incompatible
+	github.com/pulumi-pequod/pequod-mlc-stackmgmt/sdk v0.0.0-20240603201946-1ed42b76c51c
 	github.com/pulumi/pulumi/sdk/v3 v3.116.1
 )
 
