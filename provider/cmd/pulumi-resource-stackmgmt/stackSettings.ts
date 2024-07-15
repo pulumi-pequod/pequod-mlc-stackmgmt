@@ -122,6 +122,9 @@ export class StackSettings extends pulumi.ComponentResource {
           sourceContext: settings.sourceContext,
         }, { parent: this, retainOnDelete: true }); // Retain on delete so that deploy actions are maintained.
 
+        // TEST
+        console.log("__dirname: ", __dirname) 
+
         // Deployment Caching 
         // TEMPORARY - This is temporary tweak to set the Deployment Settings caching options enabled.
         // Since Deployment caching is still in preview, it is not part of the Pulumi Service SDK yet.
