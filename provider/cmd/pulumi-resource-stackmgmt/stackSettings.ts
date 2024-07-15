@@ -1,6 +1,7 @@
 // import { ComponentResource, ComponentResourceOptions, Output, getOrganization, getProject, getStack } from "@pulumi/pulumi";
 import * as pulumi from "@pulumi/pulumi";
 import * as pulumiservice from "@pulumi/pulumiservice";
+import { local } from "@pulumi/command";
 import fetch from "node-fetch";
 
 // Interface for StackSettings
@@ -122,40 +123,14 @@ export class StackSettings extends pulumi.ComponentResource {
         }, { parent: this, retainOnDelete: true }); // Retain on delete so that deploy actions are maintained.
 
         // Deployment Caching 
-        // TEMPORARY - This is temporary tweak to set the Deployment Settings caching options to enabled.
+        // TEMPORARY - This is temporary tweak to set the Deployment Settings caching options enabled.
         // Since Deployment caching is still in preview, it is not part of the Pulumi Service SDK yet.
         // So, use the API to set the cache options.
-        deploySettings.id.apply(id => {
-          const deploySettings = getDeploymentSettings().then(settings => async () => {
-            console.log("Setting cache options for stack: ", org, project, npwStack)
+        // Once the SDK is updated, this code can be removed and the code above modified to enable caching. 
+        const setCachingOption = new local.Command("set-caching-option", {
+          create: `node ./enable_deployment_caching.js ${org} ${project} ${npwStack}` 
+        }, {parent: this, dependsOn: deploySettings}) 
 
-            // Set caching options to true
-            settings.cacheOptions.enable = true
-
-            console.log("New cache options: ", JSON.stringify(settings))
-
-            // Update the deployment settings with the new cache options
-            const headers = {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-              'Authorization': `token ${process.env["PULUMI_ACCESS_TOKEN"]}`
-            };
-            const stackDeploymentSettingsUrl = `https://api.pulumi.com/api/stacks/${org}/${project}/${npwStack}/deployments/settings`;
-            const response = await fetch(stackDeploymentSettingsUrl, {
-                method: "POST",
-                body: JSON.stringify(settings),
-                headers,
-            })
-          
-            if (!response.ok) {
-                let errMessage = "";
-                try {
-                    errMessage = await response.text();
-                } catch { }
-                throw new Error(`failed to set deployment settings cache option for stack, ${org}/${project}/${npwStack}: ${errMessage}`);
-            } 
-          }) 
-        }) // End of temporary cache options code
       })
     }
 
