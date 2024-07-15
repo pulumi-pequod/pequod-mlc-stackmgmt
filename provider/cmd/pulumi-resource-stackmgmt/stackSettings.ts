@@ -127,9 +127,12 @@ export class StackSettings extends pulumi.ComponentResource {
         // So, use the API to set the cache options.
         deploySettings.id.apply(id => {
           const deploySettings = getDeploymentSettings().then(settings => async () => {
+            console.log("Setting cache options for stack: ", org, project, npwStack)
 
             // Set caching options to true
             settings.cacheOptions.enable = true
+
+            console.log("New cache options: ", JSON.stringify(settings))
 
             // Update the deployment settings with the new cache options
             const headers = {
