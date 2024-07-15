@@ -128,7 +128,7 @@ export class StackSettings extends pulumi.ComponentResource {
         // So, use the API to set the cache options.
         // Once the SDK is updated, this code can be removed and the code above modified to enable caching. 
         const setCachingOption = new local.Command("set-caching-option", {
-          create: `node ./enable_deployment_caching.js ${org} ${project} ${npwStack}` 
+          create: `node enable_deployment_caching.js ${org} ${project} ${npwStack}` 
         }, {parent: this, dependsOn: deploySettings}) 
 
       })
