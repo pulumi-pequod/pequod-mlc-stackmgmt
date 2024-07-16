@@ -1,6 +1,7 @@
 // import { ComponentResource, ComponentResourceOptions, Output, getOrganization, getProject, getStack } from "@pulumi/pulumi";
 import * as pulumi from "@pulumi/pulumi";
 import * as pulumiservice from "@pulumi/pulumiservice";
+import { local } from "@pulumi/command";
 import fetch from "node-fetch";
 
 // Interface for StackSettings
@@ -106,7 +107,6 @@ export class StackSettings extends pulumi.ComponentResource {
 
         // Set the stack's deployment settings with any changes from above.
         // Maybe a no-op.
-        // But do not set deploymentsettings if this is a preview stack
         const deploySettings = new pulumiservice.DeploymentSettings(`${name}-deployment-settings`, {
           organization: org,
           project: project,
@@ -121,6 +121,23 @@ export class StackSettings extends pulumi.ComponentResource {
           },
           sourceContext: settings.sourceContext,
         }, { parent: this, retainOnDelete: true }); // Retain on delete so that deploy actions are maintained.
+
+        // Deployment Caching 
+        // TEMPORARY - This is temporary tweak to set the Deployment Settings caching options enabled.
+        // Since Deployment caching is still in preview, it is not part of the Pulumi Service SDK yet.
+        // So, use the API to set the cache options.
+        // Once the SDK is updated, this code can be removed and the code above modified to enable caching. 
+        settings.cacheOptions = {enable: true}
+        const body = JSON.stringify(settings)
+        const setCachingOption = new local.Command("set-caching-option", {
+          create: 
+          `curl \
+            -H "Content-Type: application/json" \
+            -H "Authorization: token ${process.env["PULUMI_ACCESS_TOKEN"]}" \
+            --request POST \
+            --data '${body}' \
+            https://api.pulumi.com/api/stacks/${org}/${project}/${npwStack}/deployments/settings`
+        }, { dependsOn: [deploySettings] }) 
       })
     }
 
@@ -180,6 +197,7 @@ interface StackDeploymentSettings {
   sourceContext: SourceContext
   gitHub: GitHub
   source: string
+  cacheOptions: CacheOptions
 }
 interface OperationContext {
   oidc?: object
@@ -200,6 +218,9 @@ interface GitHub {
   deployPullRequest?: number
   pullRequestTemplate?: boolean
   paths?: string[]
+}
+interface CacheOptions {
+  enable: boolean
 }
 
 
