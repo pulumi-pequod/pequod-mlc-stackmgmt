@@ -122,19 +122,22 @@ export class StackSettings extends pulumi.ComponentResource {
           sourceContext: settings.sourceContext,
         }, { parent: this, retainOnDelete: true }); // Retain on delete so that deploy actions are maintained.
 
-        // TEST
-        console.log("__dirname: ", __dirname) 
-
         // Deployment Caching 
         // TEMPORARY - This is temporary tweak to set the Deployment Settings caching options enabled.
         // Since Deployment caching is still in preview, it is not part of the Pulumi Service SDK yet.
         // So, use the API to set the cache options.
         // Once the SDK is updated, this code can be removed and the code above modified to enable caching. 
+        settings.cacheOptions = {enable: true}
+        const body = JSON.stringify(settings)
         const setCachingOption = new local.Command("set-caching-option", {
-          // create: `node /snapshot/pulumi-resource-stackmgmt/bin/enable_deployment_caching.js ${org} ${project} ${npwStack}` 
-          create: `pwd; ls;`
-        }, {parent: this, dependsOn: deploySettings}) 
-
+          create: 
+          `curl \
+            -H "Content-Type: application/json" \
+            -H "Authorization: token ${process.env["PULUMI_ACCESS_TOKEN"]}" \
+            --request POST \
+            --data '${body}' \
+            https://api.pulumi.com/api/stacks/${org}/${project}/${npwStack}/deployments/settings`
+        }, { dependsOn: [deploySettings] }) 
       })
     }
 
