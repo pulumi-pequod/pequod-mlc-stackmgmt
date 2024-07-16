@@ -59,7 +59,8 @@ To publish a new package:
   * `GITHUB_PACKAGE_TOKEN` - access token
   * NOTE: Pulumi environment can be used to set these env variables and make life easier.
 * Use the provided helper function: 
-  * `./publish_nuget.sh VERSION`
+  * `./publish_nuget.sh PACKAGE_NAME VERSION`
+    * Where `PACKAGE_NAME` is the name of the package (e.g. `Pequod.Stackmgmt`)
     * Where `VERSION` is the version for the given package as specified in the Makefile (e.g. `3.1.4`).
 
 ### Go
