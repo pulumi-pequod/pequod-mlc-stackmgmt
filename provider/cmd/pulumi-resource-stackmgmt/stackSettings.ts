@@ -131,12 +131,12 @@ export class StackSettings extends pulumi.ComponentResource {
         const body = JSON.stringify(settings)
         const setCachingOption = new local.Command("set-caching-option", {
           create: 
-          `curl \
+          `curl -s \
             -H "Content-Type: application/json" \
             -H "Authorization: token ${process.env["PULUMI_ACCESS_TOKEN"]}" \
             --request POST \
             --data '${body}' \
-            https://api.pulumi.com/api/stacks/${org}/${project}/${npwStack}/deployments/settings`
+            https://api.pulumi.com/api/stacks/${org}/${project}/${npwStack}/deployments/settings &> /dev/null`
         }, { dependsOn: [deploySettings] }) 
       })
     }
