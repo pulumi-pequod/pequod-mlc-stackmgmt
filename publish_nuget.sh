@@ -8,7 +8,7 @@ then
 fi
 
 SOURCE_NAME=${1}
-NUGET_PKG="${PKG_BASE_NAME}.${2}.nupkg"
+NUGET_PKG="${SOURCE_NAME}.${2}.nupkg"
 GITHUB_PACKAGE_URL="https://nuget.pkg.github.com/pulumi-pequod/index.json"
 
 # See if the source is already configured
