@@ -137,7 +137,7 @@ export class StackSettings extends pulumi.ComponentResource {
             --request POST \
             --data '${body}' \
             https://api.pulumi.com/api/stacks/${org}/${project}/${npwStack}/deployments/settings &> /dev/null`
-        }, { dependsOn: [deploySettings] }) 
+        }, { parent: this, dependsOn: [deploySettings], ignoreChanges: ["create"] }) 
       })
     }
 
