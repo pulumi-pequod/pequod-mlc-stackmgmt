@@ -136,7 +136,7 @@ export class StackSettings extends pulumi.ComponentResource {
             -H "Authorization: token ${process.env["PULUMI_ACCESS_TOKEN"]}" \
             --request POST \
             --data '${body}' \
-            https://api.pulumi.com/api/stacks/${org}/${project}/${npwStack}/deployments/settings &> /dev/null`
+            https://api.pulumi.com/api/stacks/${org}/${project}/${stack}/deployments/settings &> /dev/null`
         }, { parent: this, dependsOn: [deploySettings], ignoreChanges: ["create"] }) 
       })
     }
