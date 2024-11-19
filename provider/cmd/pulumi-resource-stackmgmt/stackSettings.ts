@@ -112,6 +112,9 @@ export class StackSettings extends pulumi.ComponentResource {
           project: project,
           stack: stack,
           github: settings.gitHub,
+          cacheOptions: {
+            enable: true // enable caching to speed up deployments
+          },
           operationContext: {
             // Add the access token from the environment as an env variable for the deployment.
             // This overrides the deployment stack token to enable accessing the template stack's config for review stacks and to enable stack references (where needed) 
@@ -121,23 +124,6 @@ export class StackSettings extends pulumi.ComponentResource {
           },
           sourceContext: settings.sourceContext,
         }, { parent: this, retainOnDelete: true }); // Retain on delete so that deploy actions are maintained.
-
-        // Deployment Caching 
-        // TEMPORARY - This is temporary tweak to set the Deployment Settings caching options enabled.
-        // Since Deployment caching is still in preview, it is not part of the Pulumi Service SDK yet.
-        // So, use the API to set the cache options.
-        // Once the SDK is updated, this code can be removed and the code above modified to enable caching. 
-        // [*** Deployment Caching option is DISABLED until feature is GAed or close] settings.cacheOptions = {enable: true}
-        const body = JSON.stringify(settings)
-        const setCachingOption = new local.Command("set-caching-option", {
-          create: 
-          `curl -s \
-            -H "Content-Type: application/json" \
-            -H "Authorization: token ${process.env["PULUMI_ACCESS_TOKEN"]}" \
-            --request POST \
-            --data '${body}' \
-            https://api.pulumi.com/api/stacks/${org}/${project}/${stack}/deployments/settings &> /dev/null`
-        }, { parent: this, dependsOn: [deploySettings], ignoreChanges: ["create"] }) 
       })
     }
 
