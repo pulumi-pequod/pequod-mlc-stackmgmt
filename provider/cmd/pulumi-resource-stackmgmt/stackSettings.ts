@@ -128,13 +128,14 @@ export class StackSettings extends pulumi.ComponentResource {
     }
 
     //// TTL Schedule ////
+    // Initialize resource options. retainOnDelete is true to work-around this issue: https://github.com/pulumi/pulumi-pulumiservice/issues/451
+    let ttlOptions = { parent: this, retainOnDelete: true }
     let ttlMinutes = args.ttlMinutes
-    let ttlIgnoreChanges="" // set ignoreChanges based on whether or not the ttlMinutes is set
     if (!ttlMinutes) {
       // If not set default to 8 hours from initial launch 
       ttlMinutes = (8 * 60)
-      // and ignore changes when the ttlMinutes is not set so that each run doesn't reset the ttl based on run time.
-      ttlIgnoreChanges = "timestamp" 
+      // add ignore changes when the ttlMinutes is not set so that each run doesn't reset the ttl based on run time.
+      ttlOptions = {...{ignoreChanges: ["timestamp"]}, ...ttlOptions}
     }
     const millisecondsToAdd = ttlMinutes * 60 * 1000
     const nowTime = new Date()
@@ -150,7 +151,7 @@ export class StackSettings extends pulumi.ComponentResource {
       stack: stack,
       timestamp: expirationTime,
       deleteAfterDestroy: false,
-    }, {parent: this, ignoreChanges: [ttlIgnoreChanges], retainOnDelete: true}) // retain on delete to work around https://github.com/pulumi/pulumi-pulumiservice/issues/451
+    }, ttlOptions)
 
     //// Drift Schedule ////
     let remediation = true // assume we want to remediate
