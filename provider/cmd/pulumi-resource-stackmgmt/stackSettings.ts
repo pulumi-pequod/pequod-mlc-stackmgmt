@@ -147,7 +147,7 @@ export class StackSettings extends pulumi.ComponentResource {
       stack: stack,
       timestamp: expirationTime,
       deleteAfterDestroy: false,
-    }, {parent: this, ignoreChanges: ["timestamp"]})
+    }, {parent: this, ignoreChanges: ["timestamp"], retainOnDelete: true}) // retain on delete to work around https://github.com/pulumi/pulumi-pulumiservice/issues/451
 
     //// Drift Schedule ////
     let remediation = true // assume we want to remediate
