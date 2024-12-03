@@ -66,10 +66,10 @@ namespace Pequod.Stackmgmt
         public Input<string>? TeamAssignment { get; set; }
 
         /// <summary>
-        /// Time to live time setting.
+        /// Number of minutes to let stack live.
         /// </summary>
-        [Input("ttlTime")]
-        public Input<double>? TtlTime { get; set; }
+        [Input("ttlMinutes")]
+        public Input<double>? TtlMinutes { get; set; }
 
         public StackSettingsArgs()
         {

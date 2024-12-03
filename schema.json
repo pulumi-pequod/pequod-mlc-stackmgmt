@@ -5,9 +5,9 @@
         "stackmgmt:index:StackSettings": {
             "isComponent": true,
             "inputProperties": {
-                "ttlTime": {
+                "ttlMinutes": {
                     "type": "number",
-                    "description": "Time to live time setting."
+                    "description": "Number of minutes to let stack live."
                 },
                 "driftManagement": {
                     "type": "string",

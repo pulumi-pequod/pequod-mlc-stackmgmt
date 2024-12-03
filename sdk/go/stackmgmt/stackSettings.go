@@ -40,8 +40,8 @@ type stackSettingsArgs struct {
 	PulumiAccessToken *string `pulumi:"pulumiAccessToken"`
 	// Team to which the stack should be assigned.
 	TeamAssignment *string `pulumi:"teamAssignment"`
-	// Time to live time setting.
-	TtlTime *float64 `pulumi:"ttlTime"`
+	// Number of minutes to let stack live.
+	TtlMinutes *float64 `pulumi:"ttlMinutes"`
 }
 
 // The set of arguments for constructing a StackSettings resource.
@@ -54,8 +54,8 @@ type StackSettingsArgs struct {
 	PulumiAccessToken pulumi.StringPtrInput
 	// Team to which the stack should be assigned.
 	TeamAssignment pulumi.StringPtrInput
-	// Time to live time setting.
-	TtlTime pulumi.Float64PtrInput
+	// Number of minutes to let stack live.
+	TtlMinutes pulumi.Float64PtrInput
 }
 
 func (StackSettingsArgs) ElementType() reflect.Type {

@@ -35,7 +35,7 @@ export class StackSettings extends pulumi.ComponentResource {
             resourceInputs["driftManagement"] = args ? args.driftManagement : undefined;
             resourceInputs["pulumiAccessToken"] = args ? args.pulumiAccessToken : undefined;
             resourceInputs["teamAssignment"] = args ? args.teamAssignment : undefined;
-            resourceInputs["ttlTime"] = args ? args.ttlTime : undefined;
+            resourceInputs["ttlMinutes"] = args ? args.ttlMinutes : undefined;
         } else {
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
@@ -64,7 +64,7 @@ export interface StackSettingsArgs {
      */
     teamAssignment?: pulumi.Input<string>;
     /**
-     * Time to live time setting.
+     * Number of minutes to let stack live.
      */
-    ttlTime?: pulumi.Input<number>;
+    ttlMinutes?: pulumi.Input<number>;
 }
