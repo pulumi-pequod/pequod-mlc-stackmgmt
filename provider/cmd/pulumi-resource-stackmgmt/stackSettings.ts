@@ -128,26 +128,24 @@ export class StackSettings extends pulumi.ComponentResource {
     }
 
     //// TTL Schedule ////
-    let ttlMinutes = args.ttlMinutes
-    if (!ttlMinutes) {
-      // If not set default to 8 hours from initial launch
-      ttlMinutes = (8 * 60)
-    }
+    // Initialize resource options. 
+    const ttlMinutes = (8 * 60) // set schedule to be 8 hours from initial launch
     const millisecondsToAdd = ttlMinutes * 60 * 1000
     const nowTime = new Date()
     const nowLinuxTime = nowTime.getTime()
     const endLinuxTime = nowLinuxTime + millisecondsToAdd
     const endDate = new Date(endLinuxTime)
     // Tweak ISO time to match expected format for TtlSchedule resource.
-    // Basically takes it from YYYY-MM-DDTHH:MM:SS.mmmZ to YYYY-MM-DDTHH:MM:SSZ
-    const expirationTime = endDate.toISOString().slice(0,-5) + "Z"
+    // Basically takes it from YYYY-MM-DDTHH:MM:SS.mmmZ to YYYY-MM-DDTHH:MM:00Z 
+    // Note, the timestamp must end in `:00Z` as per https://github.com/pulumi/pulumi-pulumiservice/issues/452
+    const expirationTime = endDate.toISOString().slice(0,-7) + "00Z"
     const ttlSchedule = new pulumiservice.TtlSchedule(`${name}-ttlschedule`, {
       organization: org,
       project: project,
       stack: stack,
       timestamp: expirationTime,
       deleteAfterDestroy: false,
-    }, {parent: this, ignoreChanges: ["timestamp"], retainOnDelete: true}) // retain on delete to work around https://github.com/pulumi/pulumi-pulumiservice/issues/451
+    }, { parent: this, ignoreChanges: ["timestamp"], retainOnDelete: true }) //retainOnDelete is true to work-around this issue: https://github.com/pulumi/pulumi-pulumiservice/issues/451
 
     //// Drift Schedule ////
     let remediation = true // assume we want to remediate

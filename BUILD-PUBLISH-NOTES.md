@@ -64,6 +64,7 @@ To publish a new package:
     * Where `VERSION` is the version for the given package as specified in the Makefile (e.g. `3.1.4`).
 
 ### Go
+Just need to create a tag of the form `sdk/v0.0.0`.
 * `git tag vVERSION` 
   * E.g. `git tag sdk/v3.1.4`
 * `git push origin vVERSION`
