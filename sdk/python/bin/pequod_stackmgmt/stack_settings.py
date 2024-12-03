@@ -18,14 +18,14 @@ class StackSettingsArgs:
                  drift_management: Optional[pulumi.Input[str]] = None,
                  pulumi_access_token: Optional[pulumi.Input[str]] = None,
                  team_assignment: Optional[pulumi.Input[str]] = None,
-                 ttl_time: Optional[pulumi.Input[float]] = None):
+                 ttl_minutes: Optional[pulumi.Input[float]] = None):
         """
         The set of arguments for constructing a StackSettings resource.
         :param pulumi.Input[str] delete_stack: Stack delete setting for automated purge processing.
         :param pulumi.Input[str] drift_management: Drift management setting for refresh or correction.
         :param pulumi.Input[str] pulumi_access_token: Pulumi access token to set up as a deployment environment variable if provided.
         :param pulumi.Input[str] team_assignment: Team to which the stack should be assigned.
-        :param pulumi.Input[float] ttl_time: Time to live time setting.
+        :param pulumi.Input[float] ttl_minutes: Number of minutes to let stack live.
         """
         if delete_stack is not None:
             pulumi.set(__self__, "delete_stack", delete_stack)
@@ -35,8 +35,8 @@ class StackSettingsArgs:
             pulumi.set(__self__, "pulumi_access_token", pulumi_access_token)
         if team_assignment is not None:
             pulumi.set(__self__, "team_assignment", team_assignment)
-        if ttl_time is not None:
-            pulumi.set(__self__, "ttl_time", ttl_time)
+        if ttl_minutes is not None:
+            pulumi.set(__self__, "ttl_minutes", ttl_minutes)
 
     @property
     @pulumi.getter(name="deleteStack")
@@ -87,16 +87,16 @@ class StackSettingsArgs:
         pulumi.set(self, "team_assignment", value)
 
     @property
-    @pulumi.getter(name="ttlTime")
-    def ttl_time(self) -> Optional[pulumi.Input[float]]:
+    @pulumi.getter(name="ttlMinutes")
+    def ttl_minutes(self) -> Optional[pulumi.Input[float]]:
         """
-        Time to live time setting.
+        Number of minutes to let stack live.
         """
-        return pulumi.get(self, "ttl_time")
+        return pulumi.get(self, "ttl_minutes")
 
-    @ttl_time.setter
-    def ttl_time(self, value: Optional[pulumi.Input[float]]):
-        pulumi.set(self, "ttl_time", value)
+    @ttl_minutes.setter
+    def ttl_minutes(self, value: Optional[pulumi.Input[float]]):
+        pulumi.set(self, "ttl_minutes", value)
 
 
 class StackSettings(pulumi.ComponentResource):
@@ -108,7 +108,7 @@ class StackSettings(pulumi.ComponentResource):
                  drift_management: Optional[pulumi.Input[str]] = None,
                  pulumi_access_token: Optional[pulumi.Input[str]] = None,
                  team_assignment: Optional[pulumi.Input[str]] = None,
-                 ttl_time: Optional[pulumi.Input[float]] = None,
+                 ttl_minutes: Optional[pulumi.Input[float]] = None,
                  __props__=None):
         """
         Create a StackSettings resource with the given unique name, props, and options.
@@ -118,7 +118,7 @@ class StackSettings(pulumi.ComponentResource):
         :param pulumi.Input[str] drift_management: Drift management setting for refresh or correction.
         :param pulumi.Input[str] pulumi_access_token: Pulumi access token to set up as a deployment environment variable if provided.
         :param pulumi.Input[str] team_assignment: Team to which the stack should be assigned.
-        :param pulumi.Input[float] ttl_time: Time to live time setting.
+        :param pulumi.Input[float] ttl_minutes: Number of minutes to let stack live.
         """
         ...
     @overload
@@ -147,7 +147,7 @@ class StackSettings(pulumi.ComponentResource):
                  drift_management: Optional[pulumi.Input[str]] = None,
                  pulumi_access_token: Optional[pulumi.Input[str]] = None,
                  team_assignment: Optional[pulumi.Input[str]] = None,
-                 ttl_time: Optional[pulumi.Input[float]] = None,
+                 ttl_minutes: Optional[pulumi.Input[float]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
         if not isinstance(opts, pulumi.ResourceOptions):
@@ -163,7 +163,7 @@ class StackSettings(pulumi.ComponentResource):
             __props__.__dict__["drift_management"] = drift_management
             __props__.__dict__["pulumi_access_token"] = pulumi_access_token
             __props__.__dict__["team_assignment"] = team_assignment
-            __props__.__dict__["ttl_time"] = ttl_time
+            __props__.__dict__["ttl_minutes"] = ttl_minutes
         super(StackSettings, __self__).__init__(
             'stackmgmt:index:StackSettings',
             resource_name,
