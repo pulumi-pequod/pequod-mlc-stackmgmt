@@ -65,9 +65,9 @@ To publish a new package:
 
 ### Go
 Just need to create a tag of the form `sdk/v0.0.0`.
-* `git tag vVERSION` 
+* `git tag sdk/vVERSION` 
   * E.g. `git tag sdk/v3.1.4`
-* `git push origin vVERSION`
+* `git push origin sdk/vVERSION`
   * E.g. `git push origin sdk/v3.1.4`
 
 ## Testing Notes
